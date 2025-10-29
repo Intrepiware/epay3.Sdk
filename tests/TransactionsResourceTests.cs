@@ -12,6 +12,8 @@ namespace epay3.Sdk.Integration.Tests
     {
         private readonly epay3Client _client;
         private static readonly Random _random = new Random();
+        private const string TestCreditCardNumber = "5454545454545454";
+        private const string TestCvcNumber = "999";
 
         public TransactionsResourceTests()
         {
@@ -54,8 +56,8 @@ namespace epay3.Sdk.Integration.Tests
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Tom Smith",
-                    CardNumber = "5454545454545454", // Test card
-                    Cvc = "999",
+                    CardNumber = TestCreditCardNumber, // Test card
+                    Cvc = TestCvcNumber,
                     Month = "12",
                     Year = 2034,
                     PostalCode = "12345"
@@ -86,8 +88,8 @@ namespace epay3.Sdk.Integration.Tests
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Token Test",
-                    CardNumber = "4111111111111111",
-                    Cvc = "123",
+                    CardNumber = TestCreditCardNumber,
+                    Cvc = TestCvcNumber,
                     Month = "12",
                     Year = DateTime.Now.Year + 1,
                     PostalCode = "12345"
@@ -129,8 +131,8 @@ namespace epay3.Sdk.Integration.Tests
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Get Test",
-                    CardNumber = "4111111111111111",
-                    Cvc = "123",
+                    CardNumber = TestCreditCardNumber,
+                    Cvc = TestCvcNumber,
                     Month = "12",
                     Year = DateTime.Now.Year + 1,
                     PostalCode = "12345"
@@ -162,8 +164,8 @@ namespace epay3.Sdk.Integration.Tests
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Auth Test",
-                    CardNumber = "4111111111111111",
-                    Cvc = "123",
+                    CardNumber = TestCreditCardNumber,
+                    Cvc = TestCvcNumber,
                     Month = "12",
                     Year = DateTime.Now.Year + 1,
                     PostalCode = "12345"
@@ -199,8 +201,8 @@ namespace epay3.Sdk.Integration.Tests
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Void Test",
-                    CardNumber = "4111111111111111",
-                    Cvc = "123",
+                    CardNumber = TestCreditCardNumber,
+                    Cvc = TestCvcNumber,
                     Month = "12",
                     Year = DateTime.Now.Year + 1,
                     PostalCode = "12345"
