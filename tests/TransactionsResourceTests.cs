@@ -50,7 +50,7 @@ namespace epay3.Sdk.Integration.Tests
             {
                 Amount = GetUniqueAmount(10.00),
                 Payer = "Tom Smith",
-                EmailAddress = GetUniqueEmail("noreply@epay3.com"),
+                EmailAddress = GetUniqueEmail("test@example.com"),
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Tom Smith",

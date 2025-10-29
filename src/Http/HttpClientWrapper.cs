@@ -23,6 +23,15 @@ namespace epay3.Sdk.Http
         private bool _disposed;
 
         /// <summary>
+        /// JSON serialization settings with camelCase naming convention for API compatibility.
+        /// </summary>
+        private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
+        {
+            ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(),
+            NullValueHandling = NullValueHandling.Ignore
+        };
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="HttpClientWrapper"/> class.
         /// </summary>
         /// <param name="options">The client configuration options.</param>
@@ -100,7 +109,7 @@ namespace epay3.Sdk.Http
 
             if (body != null)
             {
-                var json = JsonConvert.SerializeObject(body);
+                var json = JsonConvert.SerializeObject(body, JsonSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
@@ -122,7 +131,7 @@ namespace epay3.Sdk.Http
 
             if (body != null)
             {
-                var json = JsonConvert.SerializeObject(body);
+                var json = JsonConvert.SerializeObject(body, JsonSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
@@ -145,7 +154,7 @@ namespace epay3.Sdk.Http
 
             if (body != null)
             {
-                var json = JsonConvert.SerializeObject(body);
+                var json = JsonConvert.SerializeObject(body, JsonSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
@@ -167,7 +176,7 @@ namespace epay3.Sdk.Http
 
             if (body != null)
             {
-                var json = JsonConvert.SerializeObject(body);
+                var json = JsonConvert.SerializeObject(body, JsonSettings);
                 request.Content = new StringContent(json, Encoding.UTF8, "application/json");
             }
 
@@ -280,7 +289,7 @@ namespace epay3.Sdk.Http
 
                 try
                 {
-                    return JsonConvert.DeserializeObject<T>(content);
+                    return JsonConvert.DeserializeObject<T>(content, JsonSettings);
                 }
                 catch (JsonException ex)
                 {

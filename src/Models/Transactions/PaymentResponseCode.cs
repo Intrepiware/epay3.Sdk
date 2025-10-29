@@ -6,7 +6,7 @@ namespace epay3.Sdk.Models
     /// <summary>
     /// Response codes for payment processing.
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter), true)]
     public enum PaymentResponseCode
     {
         /// <summary>Generic decline</summary>

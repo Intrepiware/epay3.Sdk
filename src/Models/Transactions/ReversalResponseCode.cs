@@ -6,7 +6,7 @@ namespace epay3.Sdk.Models
     /// <summary>
     /// Response codes for refund and void operations.
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter), true)]
     public enum ReversalResponseCode
     {
         /// <summary>Generic decline</summary>

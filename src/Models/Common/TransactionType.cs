@@ -6,7 +6,7 @@ namespace epay3.Sdk.Models
     /// <summary>
     /// The type of transaction or payment method.
     /// </summary>
-    [JsonConverter(typeof(StringEnumConverter))]
+    [JsonConverter(typeof(StringEnumConverter), true)]
     public enum TransactionType
     {
         /// <summary>ACH/eCheck transaction</summary>
