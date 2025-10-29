@@ -24,18 +24,19 @@ namespace epay3.Sdk.Integration.Tests
             var request = new CreateTransactionRequest
             {
                 Amount = 10.00,
-                Payer = "Test Payer",
-                EmailAddress = "test@example.com",
+                Payer = "Tom Smith",
+                EmailAddress = "noreply@epay3.com",
                 CreditCardInformation = new CreditCardInformation
                 {
-                    AccountHolder = "Test Payer",
-                    CardNumber = "4111111111111111", // Test card
-                    Cvc = "123",
+                    AccountHolder = "Tom Smith",
+                    CardNumber = "5454545454545454", // Test card
+                    Cvc = "999",
                     Month = "12",
-                    Year = DateTime.Now.Year + 1,
+                    Year = 2034,
                     PostalCode = "12345"
                 },
                 Comments = "Integration test transaction",
+                Currency = "USD",
                 SendReceipt = false
             };
 

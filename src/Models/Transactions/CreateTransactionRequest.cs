@@ -75,7 +75,7 @@ namespace epay3.Sdk.Models
         /// <summary>
         /// Gets or sets the currency for the transaction.
         /// </summary>
-        public string Currency { get; set; }
+        public string Currency { get; set; } = "USD";
 
         /// <summary>
         /// Gets or sets custom attribute values.

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using epay3.Sdk.Exceptions;
+using epay3.Sdk.Models;
 using Newtonsoft.Json;
 
 namespace epay3.Sdk.Http
@@ -226,6 +227,54 @@ namespace epay3.Sdk.Http
 
                 if (string.IsNullOrWhiteSpace(content))
                 {
+                    // For reference types, return a new instance instead of null
+                    // This handles 201 Created responses with empty bodies
+                    var type = typeof(T);
+                    if (!type.IsValueType || Nullable.GetUnderlyingType(type) != null)
+                    {
+                        var instance = Activator.CreateInstance<T>();
+
+                        // If there's a Location header and the type has an Id property, populate it
+                        if (response.Headers.Location != null)
+                        {
+                            var idProperty = type.GetProperty("Id");
+                            if (idProperty != null && idProperty.CanWrite)
+                            {
+                                var locationPath = response.Headers.Location.ToString();
+                                var segments = locationPath.Split('/');
+                                var idString = segments.LastOrDefault();
+
+                                if (idProperty.PropertyType == typeof(long) && long.TryParse(idString, out var longId))
+                                {
+                                    idProperty.SetValue(instance, longId);
+                                }
+                                else if (idProperty.PropertyType == typeof(string))
+                                {
+                                    idProperty.SetValue(instance, idString);
+                                }
+                            }
+                        }
+
+                        // If response is successful and type has response code property, set it to Success
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var paymentResponseCodeProperty = type.GetProperty("PaymentResponseCode");
+                            if (paymentResponseCodeProperty != null && paymentResponseCodeProperty.CanWrite &&
+                                paymentResponseCodeProperty.PropertyType == typeof(PaymentResponseCode))
+                            {
+                                paymentResponseCodeProperty.SetValue(instance, PaymentResponseCode.Success);
+                            }
+
+                            var reversalResponseCodeProperty = type.GetProperty("ReversalResponseCode");
+                            if (reversalResponseCodeProperty != null && reversalResponseCodeProperty.CanWrite &&
+                                reversalResponseCodeProperty.PropertyType == typeof(ReversalResponseCode))
+                            {
+                                reversalResponseCodeProperty.SetValue(instance, ReversalResponseCode.Success);
+                            }
+                        }
+
+                        return instance;
+                    }
                     return default(T);
                 }
 
