@@ -1,0 +1,3253 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "epay3 API 1.0",
+    "description": "This API supports the processing of credit card and eCheck/ACH payments.",
+    "contact": {
+      "name": "epay3 Support",
+      "url": "http://epay3.com",
+      "email": "support@epay3.com"
+    }
+  },
+  "host": "api.epaypolicydemo.com:443",
+  "schemes": ["https"],
+  "paths": {
+    "/api/v1/autoPay/{id}": {
+      "get": {
+        "tags": ["AutoPay"],
+        "summary": "Retrieves the details of an AutoPay.",
+        "operationId": "AutoPay_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the AutoPay.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The AutoPay was found. See the body of the response for details.",
+            "schema": { "$ref": "#/definitions/GetAutoPayResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The AutoPay Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/autoPays": {
+      "get": {
+        "tags": ["AutoPay"],
+        "summary": "Retrieves a list of auto pays based on search parameters.",
+        "operationId": "AutoPay_Search",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "createDateStart",
+            "in": "query",
+            "description": "When filtering by create date, the earliest permitted date. Default is 30 days ago.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "createDateEnd",
+            "in": "query",
+            "description": "When filtering by create date, the latest permitted date. Default is now.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "cancelDateStart",
+            "in": "query",
+            "description": "When filtering by cancel date, the earliest permitted date. Default is 30 days ago.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "cancelDateEnd",
+            "in": "query",
+            "description": "When filtering by cancel date, the latest permitted date. Default is now.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of results to return. Default is 1.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The size of each page. Default is 25, Maximum is 50.",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/GetAutoPaysResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/autoPay": {
+      "post": {
+        "tags": ["AutoPay"],
+        "summary": "Creates an Auto Pay.",
+        "operationId": "AutoPay_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postAutoPayRequestModel",
+            "in": "body",
+            "description": "Contains the parameters for the auto pay. In the response, the Id of the created auto pay is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PostAutoPayRequestModel" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction(s) will be processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The auto pay was created successfully. The Id of the schedule is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/autoPay/{id}/cancel": {
+      "post": {
+        "tags": ["AutoPay"],
+        "summary": "Cancels an active Auto Pay.",
+        "operationId": "AutoPay_Cancel",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the AutoPay.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction(s) will be processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "The Auto Pay was cancelled successfully." },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/autoPay/{id}/restart": {
+      "post": {
+        "tags": ["AutoPay"],
+        "summary": "Reactivate a cancelled Auto Pay.",
+        "operationId": "AutoPay_Restart",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the AutoPay.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction(s) will be processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The Auto Pay was reactivated successfully."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/batches": {
+      "get": {
+        "tags": ["Batches"],
+        "summary": "Gets a collection of Batches.",
+        "description": "",
+        "operationId": "Batches_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of results to return. Default is 1.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the batches were processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "If the operation was successful.",
+            "schema": { "$ref": "#/definitions/GetBatchesResponseModel" }
+          },
+          "400": { "description": "Bad request." },
+          "401": { "description": "Unauthorized access." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/Invoices": {
+      "get": {
+        "tags": ["Invoices"],
+        "summary": "Gets a collection of invoices given lookup attributes. Add these attributes as individual parameters.",
+        "description": "",
+        "operationId": "Invoices_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "If the operation was successful." },
+          "400": { "description": "Bad request." },
+          "401": { "description": "Unauthorized access." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      },
+      "post": {
+        "tags": ["Invoices"],
+        "summary": "Updates a collection of invoices in the management system.",
+        "description": "",
+        "operationId": "Invoices_Update",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "updateInvoicesRequestModel",
+            "in": "body",
+            "description": "The paid invoices and lookup attributes.",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UpdateInvoicesRequestModel" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The impersonation account key.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": { "description": "If the operation was successful." },
+          "400": { "description": "Bad request." },
+          "401": { "description": "Unauthorized access." }
+        },
+        "deprecated": true,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/Invoices/Email": {
+      "post": {
+        "tags": ["Invoices"],
+        "summary": "Sends an email for a collection of invoices in the management system.",
+        "description": "",
+        "operationId": "Invoices_Email",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postSendInvoiceEmailRequestModel",
+            "in": "body",
+            "description": "The Invoice lookup attributes.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostSendInvoiceEmailRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The impersonation account key.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "If the operation was successful." },
+          "400": {
+            "description": "Bad request. Verify your lookup attributes."
+          },
+          "401": { "description": "Unauthorized access." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/Invoices/Payments": {
+      "post": {
+        "tags": ["Invoices"],
+        "summary": "Updates a collection of invoices in the management system.",
+        "description": "",
+        "operationId": "Invoices_Payments",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "updateInvoicesRequestModel",
+            "in": "body",
+            "description": "The paid invoices and lookup attributes.",
+            "required": true,
+            "schema": { "$ref": "#/definitions/UpdateInvoicesRequestModel" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The impersonation account key.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "If the operation was successful." },
+          "400": {
+            "description": "Bad request. Verify your lookup attributes and invoices total."
+          },
+          "401": { "description": "Unauthorized access." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/ivrSessions": {
+      "post": {
+        "tags": ["IvrSessions"],
+        "summary": "Creates a temporary \"session\" with parameters so that the caller can be forwarded to the IVR service with this context.",
+        "operationId": "IvrSessions_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postIvrSessionRequestModel",
+            "in": "body",
+            "description": "Contains the parameters for the \"session\".",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PostIvrSessionRequestModel" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being created. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The session was created successfully. The Id of the session is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/managedInvoices/{id}": {
+      "get": {
+        "tags": ["ManagedInvoices"],
+        "summary": "Retrieves the details of a managed invoice.",
+        "operationId": "ManagedInvoices_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id or public Id of the managed invoice.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the managed is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The managed invoice was found. See the body of the response for details.",
+            "schema": { "$ref": "#/definitions/GetManagedInvoiceResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": {
+            "description": "The managed invoice Id or PublicId is invalid."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/managedInvoices": {
+      "get": {
+        "tags": ["ManagedInvoices"],
+        "summary": "Retrieves a list of Managed invoices based on search parameters.",
+        "operationId": "ManagedInvoices_Search",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "payerName",
+            "in": "query",
+            "description": "When filtering by the payer's name, the name or partial name to match.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "customerName",
+            "in": "query",
+            "description": "When filtering by the customer's name, the name or partial name to match.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "createdBy",
+            "in": "query",
+            "description": "When filtering by the creator's name, the name or partial name to match.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "dueDateFrom",
+            "in": "query",
+            "description": "When filtering by due date, the earliest permitted date. Default is null.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "dueDateTo",
+            "in": "query",
+            "description": "When filtering by due date, the latest permitted date. Default is null.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "managedInvoiceSearchStatusType",
+            "in": "query",
+            "description": "The type of managed invoice status search to perform. Default is open.",
+            "required": false,
+            "type": "string",
+            "enum": ["Open", "Paid", "Void", "All"]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of results to return. Default is 1.",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The size of each page. Default is 25, Maximum is 50.",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the managed invoice is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/GetManagedInvoicesResponseModel"
+            }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      },
+      "post": {
+        "tags": ["ManagedInvoices"],
+        "summary": "Creates Managed Invoice.",
+        "operationId": "ManagedInvoices_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postCreateManagedInvoicesRequestModel",
+            "in": "body",
+            "description": "The details of the Managed Invoice to be created. In the response, the Id of the created Managed Invoice is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostCreateManagedInvoicesRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the managed invoice is being created. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "ManagedInvoice has been created successfully. The Id of the ManagedInvoice is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostCreateManagedInvoicesRequestModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/managedInvoices/{id}/void": {
+      "post": {
+        "tags": ["ManagedInvoices"],
+        "summary": "Processes a void of a managed invoice.",
+        "operationId": "ManagedInvoices_Void",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id or public Id of the managed invoice to be voided.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the managed invoice is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The managed invoice was voided successfully."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostVoidManagedInvoiceResponseModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": {
+            "description": "The managed invoice Id or PublicId is invalid."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/managedInvoices/{id}/finance": {
+      "post": {
+        "tags": ["ManagedInvoices"],
+        "summary": "Creates Managed Invoice with Financing.",
+        "operationId": "ManagedInvoices_Finance",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The public id of the managed invoice to be edited.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "postCreateManagedInvoicesFinanceRequestModel",
+            "in": "body",
+            "description": "The details of the Quote/Invoice to be created. In the response, the Id of the created Quote/Invoice is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostCreateManagedInvoicesFinanceRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the quote/invoice is being created. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Managed Invoice has been created successfully. The Id of the Managed Invoice is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostCreateManagedInvoicesRequestModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "403": {
+            "description": "This account is not configured for Managed Invoices Or Financing. "
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/paymentSchedules/{id}": {
+      "get": {
+        "tags": ["PaymentSchedules"],
+        "summary": "Retrieves the details of a payment schedule.",
+        "operationId": "PaymentSchedules_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The public Id of the payment schedule.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment schedule was found. See the body of the response for details.",
+            "schema": {
+              "$ref": "#/definitions/GetPaymentScheduleResponseModel"
+            }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The payment schedule Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/paymentSchedules": {
+      "post": {
+        "tags": ["PaymentSchedules"],
+        "summary": "Creates a payment schedule for a delayed payment or recurring payments.",
+        "operationId": "PaymentSchedules_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postPaymentScheduleRequestModel",
+            "in": "body",
+            "description": "Contains the parameters for the payment schedule. In the response, the Id of the created payment schedule is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostPaymentScheduleRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction(s) will be processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The payment schedule was created successfully. The Id of the schedule is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/paymentSchedules/{id}/cancel": {
+      "post": {
+        "tags": ["PaymentSchedules"],
+        "summary": "Cancels an active payment schedule.",
+        "operationId": "PaymentSchedules_Cancel",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The public Id of the payment schedule.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction(s) will be processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The payment schedule was cancelled successfully."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/tokenPageSessions": {
+      "post": {
+        "tags": ["TokenPageSessions"],
+        "summary": "Creates a temporary \"session\" with parameters so that the user can be forwarded to the token page with this context.",
+        "operationId": "TokenPageSessions_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postTokenPageSessionRequestModel",
+            "in": "body",
+            "description": "Contains the parameters for the \"session\".",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostTokenPageSessionRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being created. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The session was created successfully. The Id of the session is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/tokens/{id}": {
+      "get": {
+        "tags": ["Tokens"],
+        "summary": "Retrieves the details of a token.",
+        "operationId": "Tokens_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The public Id of the token.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The token was found. See the body of the response for details.",
+            "schema": { "$ref": "#/definitions/GetTokenResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The token Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      },
+      "delete": {
+        "tags": ["Tokens"],
+        "summary": "Removes a stored token.",
+        "operationId": "Tokens_Delete",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The public Id of the token to be deleted.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "The token was deleted successfully." },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The token does not exist." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/tokens": {
+      "post": {
+        "tags": ["Tokens"],
+        "summary": "Stores a token for either ACH or credit card payments.",
+        "operationId": "Tokens_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postTokenRequestModel",
+            "in": "body",
+            "description": "The details of the token to be created. In the response, the Id of the created token is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PostTokenRequestModel" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the token is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The token was created successfully. The Id of the token is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactionFees": {
+      "get": {
+        "tags": ["TransactionFees"],
+        "summary": "Calculates and returns transaction fees for a given net amount due based on the account.",
+        "operationId": "TransactionFees_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "amount",
+            "in": "query",
+            "description": "Net amount due from which to calculate the transaction fees.",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The transaction fees were successfully calculated.",
+            "schema": {
+              "$ref": "#/definitions/GetTransactionFeesResponseModel"
+            }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactions/{id}": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Retrieves the details of a transaction.",
+        "operationId": "Transactions_Get",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the transaction.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The transaction was found. See the body of the response for details.",
+            "schema": { "$ref": "#/definitions/GetTransactionResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The transaction Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactions": {
+      "get": {
+        "tags": ["Transactions"],
+        "summary": "Retrieves a list of Transactions based on search parameters.",
+        "operationId": "Transactions_Search",
+        "consumes": [],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "beginDate",
+            "in": "query",
+            "description": "When filtering by date, the earliest permitted date. Default is 30 days ago. This parameter is ignored if beginCreateDate or endCreateDate is provided.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "When filtering by date, the latest permitted date. Default is now. This parameter is ignored if beginCreateDate or endCreateDate is provided.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "beginCreateDate",
+            "in": "query",
+            "description": "When filtering by create date, the earliest permitted date. Default is null, unless endCreateDate provided then default is 30 days ago.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "endCreateDate",
+            "in": "query",
+            "description": "When filtering by create date, the latest permitted date. Default is null.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "transactionSearchTypeId",
+            "in": "query",
+            "description": "The type of transaction search to perform. Default is Processed.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "Processed",
+              "Rejected",
+              "PendingApproval",
+              "Chargeback",
+              "PendingMyApproval",
+              "ProcessingStopped",
+              "Refunds",
+              "Returns"
+            ]
+          },
+          {
+            "name": "minAmount",
+            "in": "query",
+            "description": "When filtering by amount, the minimum permitted amount.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "maxAmount",
+            "in": "query",
+            "description": "When filtering by amount, the maximum permitted amount.",
+            "required": false,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "accountNumber",
+            "in": "query",
+            "description": "When filtering by payment method details, the last four digits of the payment method's account number.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payerName",
+            "in": "query",
+            "description": "When filtering by the payer's name, the name or partial name to match.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "batchId",
+            "in": "query",
+            "description": "When filtering by batch, the id of the batch.",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "The page of results to return. Default is 1.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The size of each page. Default is 25, Maximum is 255.",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "financeStatusId",
+            "in": "query",
+            "description": "When filtering by finance status, referring to the financing account Id",
+            "required": false,
+            "type": "string",
+            "enum": ["All", "Financed", "NotFinanced"]
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": { "$ref": "#/definitions/GetTransactionsResponseModel" }
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "type": "object",
+              "additionalProperties": { "$ref": "#/definitions/Object" }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      },
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Processes a sale transaction for either ACH or credit card.",
+        "operationId": "Transactions_Post",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postTransactionRequestModel",
+            "in": "body",
+            "description": "The details of the transaction to be processed. In the response, the Id of the created transaction is the last part of the URI in the location header attribute.",
+            "required": true,
+            "schema": { "$ref": "#/definitions/PostTransactionRequestModelV1" }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The transaction was processed successfully. The Id of the transaction is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": { "$ref": "#/definitions/PostTransactionResponseModel" }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactions/authorize": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Creates an authorization on a credit card.",
+        "operationId": "Transactions_Authorize",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "postAuthorizeTransactionRequestModel",
+            "in": "body",
+            "description": "The details of the transaction to be authorized.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostAuthorizeTransactionRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "The transaction was authorized successfully. The Id of the authorization is in the location header attribute."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostAuthorizeTransactionResponseModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactions/{id}/refund": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Processes a refund of a transaction.",
+        "operationId": "Transactions_Refund",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the transaction.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "postRefundTransactionRequestModel",
+            "in": "body",
+            "description": "The details of how to process the refund.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostRefundTransactionRequestModel"
+            }
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The transaction was refunded successfully."
+          },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostRefundTransactionResponseModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The transaction Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    },
+    "/api/v1/transactions/{id}/void": {
+      "post": {
+        "tags": ["Transactions"],
+        "summary": "Processes a void of a transaction.",
+        "operationId": "Transactions_Void",
+        "consumes": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml",
+          "application/x-www-form-urlencoded"
+        ],
+        "produces": [
+          "application/json",
+          "text/json",
+          "application/xml",
+          "text/xml"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The Id of the transaction.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "postVoidTransactionRequestModel",
+            "in": "body",
+            "description": "The details of how to process the void.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PostVoidTransactionRequestModel"
+            }
+          },
+          {
+            "name": "sendReceipt",
+            "in": "query",
+            "description": "[Deprecated. Please use the postVoidTransactionRequestModel parameter.] Set to true if a receipt should be sent to all parties upon a successful void.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "impersonationAccountKey",
+            "in": "header",
+            "description": "The key that allows impersonation of another account for which the transaction is being processed. Only specify a value if the account being impersonated is different from the account that is submitting this request.",
+            "required": false,
+            "schema": { "type": "string" },
+            "type": "string",
+            "default": ""
+          }
+        ],
+        "responses": {
+          "200": { "description": "The transaction was voided successfully." },
+          "400": {
+            "description": "Invalid request. Check the body for any related errors.",
+            "schema": {
+              "$ref": "#/definitions/PostVoidTransactionResponseModel"
+            }
+          },
+          "401": {
+            "description": "Invalid credentials. Please verify the key and secret used to generate the authorization header value."
+          },
+          "404": { "description": "The transaction Id is invalid." }
+        },
+        "deprecated": false,
+        "security": [{ "basic": [] }]
+      }
+    }
+  },
+  "definitions": {
+    "GetPaymentScheduleResponseModel": {
+      "description": "Provides details of a payment schedule.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The public Id of the payment schedule.",
+          "type": "string"
+        },
+        "payer": {
+          "description": "Name of the payer that is shown on the receipt.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "The recipient of the emailed receipt.",
+          "type": "string"
+        },
+        "tokenId": {
+          "description": "The token Id that represents the payment method to be used on the schedule.",
+          "type": "string"
+        },
+        "numberOfTotalPayments": {
+          "format": "int32",
+          "description": "The number of payments to process on the schedule if the payment schedule has a pre-determined list of payments.",
+          "type": "integer"
+        },
+        "numberOfExecutedPayments": {
+          "format": "int32",
+          "description": "The number of executed payments.",
+          "type": "integer"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The amount of each recurring payment.",
+          "type": "number"
+        },
+        "payerFee": {
+          "format": "double",
+          "description": "Used if the calling application has pre-calculated a payer fee. In that case, the fee will not be re-calculated. This amount, if set, will not be added to the amount field prior to processing.",
+          "type": "number"
+        },
+        "startDate": {
+          "format": "date-time",
+          "description": "The date of the initial payment.",
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "description": "The end date of the schedule if the schedule was created with a pre-determined end date.",
+          "type": "string"
+        },
+        "nextPaymentDate": {
+          "format": "date-time",
+          "description": "The date of the next payment.",
+          "type": "string"
+        },
+        "interval": {
+          "description": "The interval by which the payments should be run.",
+          "enum": ["Day", "Week", "Month", "Year"],
+          "type": "string"
+        },
+        "intervalCount": {
+          "format": "int32",
+          "description": "The number of days, weeks, etc to wait between payments.",
+          "type": "integer"
+        },
+        "attributeValues": {
+          "description": "Dictionary of custom attribute values. The key in the dictionary is the identifier of the custom attribute.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "comments": {
+          "description": "Comments that are shown on the receipt.",
+          "type": "string"
+        }
+      }
+    },
+    "GetAutoPayResponseModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "description": "The Id of the AutoPay.",
+          "type": "integer"
+        },
+        "tokenId": {
+          "description": "The token Id that represents the payment method to be used on the schedule.",
+          "type": "string"
+        },
+        "attributes": {
+          "description": "The attributes associated with the AutoPay.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "email": {
+          "description": "The Email address associated with the AutoPay.",
+          "type": "string"
+        },
+        "createDate": {
+          "format": "date-time",
+          "description": "Create date of the auto pay subscription.",
+          "type": "string"
+        },
+        "cancelDate": {
+          "format": "date-time",
+          "description": "Cancel date of the auto pay subscription.",
+          "type": "string"
+        },
+        "financeQuoteNumber": {
+          "description": "The finance quote number associated with the AutoPay, if applicable.",
+          "type": "string"
+        },
+        "financeDownPaymentTransactionId": {
+          "format": "int64",
+          "description": "The Id of the transaction that represents the down payment for the AutoPay, if applicable.",
+          "type": "integer"
+        }
+      }
+    },
+    "Object": { "type": "object", "properties": {} },
+    "GetAutoPaysResponseModel": {
+      "type": "object",
+      "properties": {
+        "autoPays": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/GetAutoPaysListItemModel" }
+        },
+        "totalRecords": { "format": "int32", "type": "integer" }
+      }
+    },
+    "GetAutoPaysListItemModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "description": "The Id of the AutoPay.",
+          "type": "integer"
+        },
+        "tokenId": {
+          "description": "The token Id that represents the payment method to be used on the schedule.",
+          "type": "string"
+        },
+        "attributes": {
+          "description": "The attributes associated with the AutoPay.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "email": {
+          "description": "The Email address associated with the AutoPay.",
+          "type": "string"
+        },
+        "createDate": {
+          "format": "date-time",
+          "description": "Create date of the auto pay subscription.",
+          "type": "string"
+        },
+        "cancelDate": {
+          "format": "date-time",
+          "description": "Cancel date of the auto pay subscription.",
+          "type": "string"
+        }
+      }
+    },
+    "PostAutoPayRequestModel": {
+      "required": ["emailAddress"],
+      "type": "object",
+      "properties": {
+        "publicTokenId": {
+          "description": "Used to reference a previously stored payment token.",
+          "type": "string"
+        },
+        "attributeValues": {
+          "description": "Dictionary of custom attribute values. The key in the dictionary is the identifier of the custom attribute.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "emailAddress": {
+          "description": "The recipient of the emailed receipt.",
+          "type": "string"
+        },
+        "payer": { "type": "string" }
+      }
+    },
+    "GetBatchesResponseModel": {
+      "type": "object",
+      "properties": {
+        "batches": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/BatchListItemModel" }
+        },
+        "totalRecords": { "format": "int32", "type": "integer" }
+      }
+    },
+    "BatchListItemModel": {
+      "type": "object",
+      "properties": {
+        "id": { "format": "int64", "type": "integer" },
+        "created": { "format": "date-time", "type": "string" },
+        "numberOfCredits": { "format": "int32", "type": "integer" },
+        "totalOfCredits": { "format": "double", "type": "number" },
+        "numberOfDebits": { "format": "int32", "type": "integer" },
+        "totalOfDebits": { "format": "double", "type": "number" },
+        "currency": { "enum": ["USD", "CAD"], "type": "string" },
+        "divisions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/DivisionViewModel" }
+        },
+        "processor": { "type": "string" },
+        "processorPaymentMethod": { "type": "string" }
+      }
+    },
+    "DivisionViewModel": {
+      "type": "object",
+      "properties": {
+        "division": { "type": "string" },
+        "amount": { "format": "double", "type": "number" }
+      }
+    },
+    "InvoicesModel": {
+      "type": "object",
+      "properties": {
+        "payerName": { "type": "string" },
+        "emailAddresses": { "type": "array", "items": { "type": "string" } },
+        "autoPaySubscriptionId": { "format": "int64", "type": "integer" },
+        "enableAutopay": { "type": "boolean" },
+        "enableAutopayPaylessEnrollment": { "type": "boolean" },
+        "autoPayEmailOffset": { "format": "int32", "type": "integer" },
+        "autoPayCancelable": { "type": "boolean" },
+        "invoiceAttributeMetadata": {
+          "description": "Metadata on any custom attributes that will be displayed at the invoice level.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttributeMetadataModel" }
+        },
+        "invoices": {
+          "description": "The collection of invoices.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/InvoiceModel" }
+        },
+        "status": {
+          "description": "Whether the referenced account was found.",
+          "enum": ["Success", "AccountNotFound", "Error"],
+          "type": "string"
+        },
+        "exception": {
+          "$ref": "#/definitions/SerializableException",
+          "description": "On an error, the thrown exception."
+        },
+        "anyFinancingEligible": { "type": "boolean", "readOnly": true }
+      }
+    },
+    "AttributeMetadataModel": {
+      "description": "Contains metadata about custom attributes.",
+      "required": ["displayOrder", "parameterName", "displayName"],
+      "type": "object",
+      "properties": {
+        "displayOrder": {
+          "format": "byte",
+          "description": "The order in which the attribute should be displayed from left to right and top to bottom.",
+          "type": "string"
+        },
+        "parameterName": {
+          "description": "The parameter name of the value as it's being read from the data source.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The name of the custom attribute as it's displayed on the user interface.",
+          "type": "string"
+        }
+      }
+    },
+    "InvoiceModel": {
+      "description": "Describes the details of an individual invoice.",
+      "required": ["id", "name", "dueDate", "attributeValues", "invoiceItems"],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier of the invoice.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The customer name on the invoice.",
+          "type": "string"
+        },
+        "dueDate": {
+          "format": "date-time",
+          "description": "The due date of the invoice.",
+          "type": "string"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The total amount due.",
+          "type": "number"
+        },
+        "maximumAmount": {
+          "format": "double",
+          "description": "The maximum amount the payer is allowed to pay.",
+          "type": "number"
+        },
+        "minimumAmount": {
+          "format": "double",
+          "description": "The minimum amount the payer is allowed to pay.",
+          "type": "number"
+        },
+        "allowPartialPayment": {
+          "description": "Indicates whether a partial payment is allowed on the invoice.",
+          "type": "boolean"
+        },
+        "comment": {
+          "description": "The Comment for the Invoice submitted by the payer.",
+          "type": "string"
+        },
+        "divisionId": {
+          "description": "Optional division id to specify recieving account.",
+          "type": "string"
+        },
+        "downPaymentAmount": {
+          "format": "double",
+          "description": "If finance eligible, the required down payment",
+          "type": "number"
+        },
+        "numberOfInstallments": {
+          "format": "int32",
+          "description": "If financed, the number of installment payments.",
+          "type": "integer"
+        },
+        "installmentAmount": {
+          "format": "double",
+          "description": "if financed, the amount of each installment payment.",
+          "type": "number"
+        },
+        "attributeValues": {
+          "description": "The actual values of the custom attributes at the invoice level.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttributeValueModel" }
+        },
+        "searchAttributeValues": {
+          "description": "Attributes used to find this invoice in management system",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "invoiceItems": {
+          "description": "A collection of invoice items.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/InvoiceItemModel" }
+        },
+        "policyEffectiveDate": {
+          "format": "date-time",
+          "description": "Effective date of the policy.",
+          "type": "string"
+        },
+        "policyNumber": {
+          "description": "The policy number.",
+          "type": "string"
+        },
+        "isFinancingEligible": { "type": "boolean", "readOnly": true },
+        "financeStatusDescription": { "type": "string" },
+        "financeEligibilityHash": { "type": "string" },
+        "dataToken": { "type": "string" },
+        "invoiceLineItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/InvoiceLineItemModel" }
+        }
+      }
+    },
+    "SerializableException": {
+      "type": "object",
+      "properties": {
+        "message": { "type": "string" },
+        "stackTrace": { "type": "string" },
+        "innerSerializableException": {
+          "$ref": "#/definitions/SerializableException"
+        }
+      }
+    },
+    "AttributeValueModel": {
+      "description": "Contains information about a single attribute value that is tied to a transaction.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The user-friendly name of the attribute.",
+          "type": "string"
+        },
+        "parameterName": {
+          "description": "The parameter name of the attribute.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value of the attribute.",
+          "type": "string"
+        }
+      }
+    },
+    "InvoiceItemModel": {
+      "description": "Holds information for an individual invoice item.",
+      "required": ["id", "attributeValues"],
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The Id of the invoice item.",
+          "type": "string"
+        },
+        "attributeValues": {
+          "description": "A collection of custom attribute values.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttributeValueModel" }
+        }
+      }
+    },
+    "InvoiceLineItemModel": {
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "amount": { "format": "double", "type": "number" }
+      }
+    },
+    "UpdateInvoicesRequestModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "description": "The unique identifier for the transaction.",
+          "type": "integer"
+        },
+        "payer": {
+          "description": "The name of the payer initiating the transaction.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "The email address of the payer.",
+          "type": "string"
+        },
+        "paidInvoices": {
+          "description": "The collection of paid invoices with amounts and comments.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/PaidInvoiceModel" }
+        },
+        "attributeValues": {
+          "description": "The list of attribute values that uniquely identify this payer in the underlying accounting system.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "PaidInvoiceModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The unique identifier for the invoice.",
+          "type": "string"
+        },
+        "paidAmount": {
+          "format": "double",
+          "description": "The amount being paid on the given invoice.",
+          "type": "number"
+        },
+        "financeDownPayment": {
+          "format": "double",
+          "description": "The amount of financed down payment for the given invoice",
+          "type": "number"
+        },
+        "financedAmount": {
+          "format": "double",
+          "description": "The amount of the invoice that has been financed.",
+          "type": "number"
+        },
+        "comment": {
+          "description": "Comments by the payer for the paid invoice.",
+          "type": "string"
+        },
+        "division": {
+          "description": "Division for routing funds.",
+          "type": "string"
+        },
+        "dueDate": {
+          "format": "date-time",
+          "description": "Date Invoice is Due.",
+          "type": "string"
+        },
+        "attributeValues": {
+          "description": "Attribute values to be saved with the paid invoice. This is used by the payment page.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "searchAttributeValues": {
+          "description": "Attribute values to locate this invoice in its management system.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "managedInvoiceId": {
+          "format": "int64",
+          "description": "Managed Invoice Id.",
+          "type": "integer"
+        }
+      }
+    },
+    "PostSendInvoiceEmailRequestModel": {
+      "required": ["invoiceId", "emailToAddresses"],
+      "type": "object",
+      "properties": {
+        "invoiceId": { "description": "Invoice Id.", "type": "string" },
+        "emailToAddresses": {
+          "description": "The email addresses to whom emails to be sent.",
+          "type": "string"
+        },
+        "attributeValues": {
+          "description": "The list of attribute values that uniquely identify this payer in the underlying accounting system.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "emailMessage": { "description": "Email Message.", "type": "string" }
+      }
+    },
+    "PostIvrSessionRequestModel": {
+      "type": "object",
+      "properties": {
+        "attributeValues": {
+          "description": "Key/value collection of all custom attributes for the IVR session.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "phoneNumber": {
+          "description": "The phone number of the caller.",
+          "type": "string"
+        },
+        "expiration": {
+          "format": "int32",
+          "description": "The amount of time from creation, in seconds, before the session expires.",
+          "type": "integer"
+        }
+      }
+    },
+    "GetManagedInvoiceResponseModel": {
+      "type": "object",
+      "properties": {
+        "publicId": {
+          "description": "The Public identifier of the managed invoice.",
+          "type": "string"
+        },
+        "accountName": {
+          "description": "The name of the account.",
+          "type": "string"
+        },
+        "payer": { "description": "The name of the payer.", "type": "string" },
+        "customer": {
+          "description": "The name of the customer.",
+          "type": "string"
+        },
+        "createDate": {
+          "format": "date-time",
+          "description": "The date when invoice was created.",
+          "type": "string"
+        },
+        "createdByUser": {
+          "description": "The user who created the invoice.",
+          "type": "string"
+        },
+        "dueDate": {
+          "format": "date-time",
+          "description": "The expiration date.",
+          "type": "string"
+        },
+        "status": {
+          "description": "Represents the current status of the invoice.",
+          "type": "string"
+        },
+        "invoiceTotal": {
+          "format": "double",
+          "description": "The sum of all charges specified on invoice.",
+          "type": "number"
+        },
+        "cancelDate": {
+          "format": "date-time",
+          "description": "The date when invoice was cancelled or voided.",
+          "type": "string"
+        },
+        "completeDate": {
+          "format": "date-time",
+          "description": "The date when invoice was completed or paid.",
+          "type": "string"
+        },
+        "offPlatformDate": {
+          "format": "date-time",
+          "description": "The date when invoice was completed or paid Offplatform.",
+          "type": "string"
+        },
+        "quickQuoteDate": {
+          "format": "date-time",
+          "description": "The date when quick quote was retrieved to check for financing.",
+          "type": "string"
+        },
+        "emailSendDate": {
+          "format": "date-time",
+          "description": "The date when an email was sent to the payer.",
+          "type": "string"
+        },
+        "lineItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "taxes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "fees": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "financingInfo": {
+          "$ref": "#/definitions/QuoteInvoiceFinancingInfoModel"
+        },
+        "quickQuote": { "$ref": "#/definitions/QuickQuoteModel" }
+      }
+    },
+    "QuoteInvoiceLineItem": {
+      "required": ["description"],
+      "type": "object",
+      "properties": {
+        "description": { "type": "string" },
+        "amount": { "format": "double", "type": "number" },
+        "earned": { "type": "boolean" }
+      }
+    },
+    "QuoteInvoiceFinancingInfoModel": {
+      "type": "object",
+      "properties": {
+        "lineOfBusiness": { "type": "string" },
+        "businessType": {
+          "enum": ["Commercial", "Personal", "Other"],
+          "type": "string"
+        },
+        "minimumEarnedPercentage": { "format": "double", "type": "number" },
+        "numberOfDaysToCancel": { "format": "int32", "type": "integer" },
+        "invoiceAuditable": { "type": "boolean" },
+        "insuredContact": { "$ref": "#/definitions/UnderwritingContactModel" },
+        "carrierContact": { "$ref": "#/definitions/UnderwritingContactModel" },
+        "mgaContact": { "$ref": "#/definitions/UnderwritingContactModel" }
+      }
+    },
+    "QuickQuoteModel": {
+      "type": "object",
+      "properties": {
+        "invoiceId": { "type": "string" },
+        "isEligible": { "type": "boolean" },
+        "downPayment": { "format": "double", "type": "number" },
+        "financeIneligibilityReason": { "type": "string" },
+        "numberOfInstallments": { "format": "int32", "type": "integer" },
+        "installmentAmount": { "format": "double", "type": "number" },
+        "exception": { "$ref": "#/definitions/SerializableException" },
+        "financeEligibilityHash": { "type": "string" },
+        "financeCompanyName": { "type": "string" }
+      }
+    },
+    "UnderwritingContactModel": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "companyCode": { "type": "string" },
+        "companyNAIC": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "state": {
+          "enum": [
+            "AL",
+            "AK",
+            "AZ",
+            "AR",
+            "CA",
+            "CO",
+            "CT",
+            "DC",
+            "DE",
+            "FL",
+            "GA",
+            "HI",
+            "ID",
+            "IL",
+            "IN",
+            "IA",
+            "KS",
+            "KY",
+            "LA",
+            "ME",
+            "MD",
+            "MA",
+            "MI",
+            "MN",
+            "MS",
+            "MO",
+            "MT",
+            "NE",
+            "NV",
+            "NH",
+            "NJ",
+            "NM",
+            "NY",
+            "NC",
+            "ND",
+            "OH",
+            "OK",
+            "OR",
+            "PA",
+            "RI",
+            "SC",
+            "SD",
+            "TN",
+            "TX",
+            "UT",
+            "VT",
+            "VA",
+            "WA",
+            "WV",
+            "WI",
+            "WY",
+            "VI",
+            "PR",
+            "UK"
+          ],
+          "type": "string"
+        },
+        "displayState": { "type": "string", "readOnly": true },
+        "suite": { "type": "string" },
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "postalCode": { "type": "string" },
+        "country": { "format": "byte", "type": "string" },
+        "countries": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/LookUpModel[Byte]" }
+        },
+        "addressWithoutSuite": { "type": "string", "readOnly": true },
+        "addressWithSuite": { "type": "string", "readOnly": true },
+        "addressWithSuiteAndCountry": { "type": "string", "readOnly": true },
+        "streetAddress": { "type": "string", "readOnly": true },
+        "countryName": { "type": "string", "readOnly": true }
+      }
+    },
+    "LookUpModel[Byte]": {
+      "type": "object",
+      "properties": {
+        "id": { "format": "byte", "type": "string" },
+        "displayName": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "GetManagedInvoicesResponseModel": {
+      "type": "object",
+      "properties": {
+        "managedInvoices": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/GetManagedInvoiceResponseModel" }
+        },
+        "totalRecords": { "format": "int32", "type": "integer" }
+      }
+    },
+    "PostCreateManagedInvoicesRequestModel": {
+      "required": [
+        "payer",
+        "emailAddress",
+        "amount",
+        "customerName",
+        "invoiceNumber",
+        "dueDate",
+        "lineItems"
+      ],
+      "type": "object",
+      "properties": {
+        "policyNumber": { "type": "string" },
+        "effectiveDate": { "format": "date-time", "type": "string" },
+        "expirationDate": { "format": "date-time", "type": "string" },
+        "payer": { "type": "string" },
+        "emailAddress": { "type": "string" },
+        "amount": { "format": "double", "type": "number" },
+        "attributeValues": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "customerName": { "type": "string" },
+        "invoiceNumber": { "type": "string" },
+        "dueDate": { "format": "date-time", "type": "string" },
+        "lineItems": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "taxes": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "fees": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/QuoteInvoiceLineItem" }
+        },
+        "showBreakdownDuringPayment": { "type": "boolean" }
+      }
+    },
+    "PostVoidManagedInvoiceResponseModel": {
+      "type": "object",
+      "properties": {
+        "voidManagedInvoiceResponseCode": {
+          "enum": ["Success", "PreviouslyVoided", "PreviouslyCompleted"],
+          "type": "string"
+        },
+        "errorMessage": { "type": "string" }
+      }
+    },
+    "PostCreateManagedInvoicesFinanceRequestModel": {
+      "required": [
+        "lineOfBusiness",
+        "businessType",
+        "insuredContact",
+        "carrierContact"
+      ],
+      "type": "object",
+      "properties": {
+        "policyNumber": { "type": "string" },
+        "effectiveDate": { "format": "date-time", "type": "string" },
+        "expirationDate": { "format": "date-time", "type": "string" },
+        "lineOfBusiness": { "type": "string" },
+        "businessType": {
+          "enum": ["Commercial", "Personal", "Other"],
+          "type": "string"
+        },
+        "minimumEarnedPercentage": { "format": "double", "type": "number" },
+        "numberOfDaysToCancel": { "format": "int32", "type": "integer" },
+        "invoiceAuditable": { "type": "boolean" },
+        "insuredContact": {
+          "$ref": "#/definitions/PostCreateManagedInvoicesContactModel"
+        },
+        "carrierContact": {
+          "$ref": "#/definitions/PostCreateManagedInvoicesContactModel"
+        },
+        "mgaContact": {
+          "$ref": "#/definitions/PostCreateManagedInvoicesContactModel"
+        }
+      }
+    },
+    "PostCreateManagedInvoicesContactModel": {
+      "required": ["name"],
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "companyCode": { "type": "string" },
+        "companyNAIC": { "type": "string" },
+        "emailAddress": { "type": "string" },
+        "phone": { "type": "string" },
+        "suite": { "type": "string" },
+        "street": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "postalCode": { "type": "string" }
+      }
+    },
+    "PostPaymentScheduleRequestModel": {
+      "description": "Creates a payment schedule for recurring payments.",
+      "required": [
+        "payer",
+        "emailAddress",
+        "tokenId",
+        "amount",
+        "interval",
+        "intervalCount"
+      ],
+      "type": "object",
+      "properties": {
+        "payer": {
+          "description": "Name of the payer that is shown on the receipt.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "The recipient of the emailed receipt.",
+          "type": "string"
+        },
+        "tokenId": {
+          "description": "The token Id that represents the payment method to be used on the schedule.",
+          "type": "string"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The amount of each recurring payment.",
+          "maximum": 10000000,
+          "type": "number"
+        },
+        "startDate": {
+          "format": "date-time",
+          "description": "The date of the initial payment. If no date is set, the first payment will be run immediately.",
+          "type": "string"
+        },
+        "endDate": {
+          "format": "date-time",
+          "description": "The date of the last payment if the schedule is supposed to have an end date.",
+          "type": "string"
+        },
+        "numberOfTotalPayments": {
+          "format": "int32",
+          "description": "The number of payments to process on the schedule if the schedule is only supposed to have a pre-determined number of payments.",
+          "maximum": 365,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "interval": {
+          "description": "The interval by which the payments should be run.",
+          "enum": ["Day", "Week", "Month", "Year"],
+          "type": "string"
+        },
+        "intervalCount": {
+          "format": "int32",
+          "description": "The number of days, weeks, etc to wait between payments.",
+          "maximum": 365,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "attributeValues": {
+          "description": "Dictionary of custom attribute values. The key in the dictionary is the identifier of the custom attribute.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "comments": {
+          "description": "Comments that are shown on the receipt.",
+          "type": "string"
+        },
+        "initiatingPartyFee": {
+          "format": "double",
+          "description": "The fee being charged by the initiating party of this transaction. This does not include the standard transaction fees.",
+          "maximum": 1000000,
+          "minimum": 0,
+          "type": "number"
+        },
+        "ipAddress": {
+          "description": "The IP Address of the payer.",
+          "type": "string"
+        }
+      }
+    },
+    "PostTokenPageSessionRequestModel": {
+      "description": "Represents the information needed to customize a single token via the token page.",
+      "type": "object",
+      "properties": {
+        "attributeValues": {
+          "description": "Key/value collection of all custom attributes that will eventually be stored with the token.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "successUrl": {
+          "description": "The Url to which the user will be redirected upon a token being successfully created.",
+          "type": "string"
+        },
+        "acceptedPaymentMethods": {
+          "description": "A white-list of accepted payment methods that should be shown on the token page. If none are provided, all payment methods will be enabled. = ['CreditCard', 'Ach']",
+          "type": "array",
+          "items": { "enum": ["CreditCard", "Ach"], "type": "string" }
+        }
+      }
+    },
+    "GetTokenResponseModel": {
+      "description": "Provides details of a token.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The public Id of the token.",
+          "type": "string"
+        },
+        "payer": { "description": "The name of the payer.", "type": "string" },
+        "emailAddress": {
+          "description": "The email address of the payer.",
+          "type": "string"
+        },
+        "attributeValues": {
+          "description": "A collection of key/value pairs for any custom attribute values for this token.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttributeValueModel" }
+        },
+        "transactionType": {
+          "description": "The type of transaction.",
+          "enum": [
+            "Ach",
+            "Visa",
+            "MasterCard",
+            "Discover",
+            "AmericanExpress",
+            "Jcb",
+            "PaperCheck",
+            "LockboxCheck"
+          ],
+          "type": "string"
+        },
+        "maskedAccountNumber": {
+          "description": "The masked account number for display to the user.",
+          "type": "string"
+        },
+        "country": {
+          "description": "The country of the token",
+          "enum": ["UnitedStates", "Canada", "Mexico"],
+          "type": "string"
+        }
+      }
+    },
+    "PostTokenRequestModel": {
+      "description": "Creates a payment token.",
+      "required": ["payer", "emailAddress"],
+      "type": "object",
+      "properties": {
+        "payer": {
+          "description": "Name of the payer that is storing the token.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "The email address of the payer.",
+          "type": "string"
+        },
+        "creditCardInformation": {
+          "$ref": "#/definitions/CreditCardInformationModel",
+          "description": "Used for credit card tokens."
+        },
+        "bankAccountInformation": {
+          "$ref": "#/definitions/BankAccountInformationModel",
+          "description": "Used for eCheck\\ACH tokens."
+        },
+        "attributeValues": {
+          "description": "Dictionary of custom attribute values. The key in the dictionary is the identifier of the custom attribute.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      }
+    },
+    "CreditCardInformationModel": {
+      "required": ["accountHolder", "cardNumber", "cvc", "month", "year"],
+      "type": "object",
+      "properties": {
+        "accountHolder": {
+          "description": "Name that is on the credit card account.",
+          "type": "string"
+        },
+        "cardNumber": {
+          "description": "Number for the credit card.",
+          "pattern": "\\d+",
+          "type": "string"
+        },
+        "cvc": {
+          "description": "Security code for the credit card.",
+          "type": "string"
+        },
+        "month": {
+          "format": "byte",
+          "description": "Month of card expiration (MM).",
+          "maximum": 12,
+          "minimum": 1,
+          "type": "string"
+        },
+        "year": {
+          "format": "int32",
+          "description": "Year of card expiration (YYYY).",
+          "type": "integer"
+        },
+        "postalCode": {
+          "description": "Postal Code for the credit card.",
+          "type": "string"
+        }
+      }
+    },
+    "BankAccountInformationModel": {
+      "required": ["accountType", "routingNumber", "accountNumber"],
+      "type": "object",
+      "properties": {
+        "accountHolder": {
+          "description": "Name that is on the bank account.",
+          "type": "string"
+        },
+        "firstName": {
+          "description": "First name of the person authorizing the transaction.",
+          "type": "string"
+        },
+        "lastName": {
+          "description": "Last name of the person authorizing the transaction.",
+          "type": "string"
+        },
+        "accountType": {
+          "description": "The type of the bank account.",
+          "enum": [
+            "PersonalChecking",
+            "PersonalSavings",
+            "CorporateChecking",
+            "CorporateSavings"
+          ],
+          "type": "string"
+        },
+        "routingNumber": {
+          "description": "The 9-digit routing number.",
+          "pattern": "\\d+",
+          "type": "string"
+        },
+        "accountNumber": {
+          "description": "The bank account number.",
+          "pattern": "\\d+",
+          "type": "string"
+        }
+      }
+    },
+    "GetTransactionFeesResponseModel": {
+      "type": "object",
+      "properties": {
+        "achPayerFee": { "format": "double", "type": "number" },
+        "creditCardPayerFee": { "format": "double", "type": "number" }
+      }
+    },
+    "GetTransactionResponseModel": {
+      "description": "Provides details of a transaction.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "description": "The Id of the transaction.",
+          "type": "integer"
+        },
+        "publicId": {
+          "description": "The PublicId of the transaction",
+          "type": "string"
+        },
+        "payer": { "description": "The name of the payer.", "type": "string" },
+        "emailAddress": {
+          "description": "The email address of the payer.",
+          "type": "string"
+        },
+        "transactionType": {
+          "description": "The type of the transaction.",
+          "enum": [
+            "Ach",
+            "Visa",
+            "MasterCard",
+            "Discover",
+            "AmericanExpress",
+            "Jcb",
+            "PaperCheck",
+            "LockboxCheck"
+          ],
+          "type": "string"
+        },
+        "amount": {
+          "format": "double",
+          "description": "The total amount of the transaction that was charged to the payer including all fees.",
+          "type": "number"
+        },
+        "fee": {
+          "format": "double",
+          "description": "The transaction fee charged.",
+          "type": "number"
+        },
+        "payerFee": {
+          "format": "double",
+          "description": "The fee charged to the payer.",
+          "type": "number"
+        },
+        "maskedAccountNumber": {
+          "description": "The masked credit card number or account number used by the payer.",
+          "type": "string"
+        },
+        "comments": {
+          "description": "Comments left by the payer at the initial creation of the transaction.",
+          "type": "string"
+        },
+        "originalTransactionId": {
+          "format": "int64",
+          "description": "The ID of the original transaction. Only present on returns, refunds and similarly derivative transactions.",
+          "type": "integer"
+        },
+        "events": {
+          "description": "A collection of all events that have occurred.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/TransactionEventModel" }
+        },
+        "attributeValues": {
+          "description": "A collection of key/value pairs for any custom attribute values for this transaction.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttributeValueModel" }
+        },
+        "attachments": {
+          "description": "A collection of all attachments for this transaction.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/AttachmentModel" }
+        },
+        "paidInvoices": {
+          "description": "A collection of all paid invoices for this transaction.",
+          "type": "array",
+          "items": { "$ref": "#/definitions/PaidInvoiceModel" }
+        },
+        "financingAccount": { "type": "string" }
+      }
+    },
+    "TransactionEventModel": {
+      "type": "object",
+      "properties": {
+        "eventDate": {
+          "format": "date-time",
+          "description": "The date of the event.",
+          "type": "string"
+        },
+        "eventType": {
+          "description": "The type of event.",
+          "enum": [
+            "Sale",
+            "Credit",
+            "Statement",
+            "Reject",
+            "Chargeback",
+            "Refund",
+            "Settle",
+            "GeneralError",
+            "Alert",
+            "Void",
+            "Return",
+            "Send",
+            "Debit",
+            "Hold",
+            "ChargebackReported",
+            "Authorize",
+            "Capture",
+            "ChargebackRepresentmentClosed",
+            "ChargebackReversal",
+            "ChargebackDisputed",
+            "ChargebackDeclinedToDispute",
+            "ClientNotificationSent",
+            "ChargebackDisputeFailed",
+            "Batch",
+            "Report",
+            "LockboxException",
+            "OffPlatform",
+            "RefundRejected",
+            "Fraud"
+          ],
+          "type": "string"
+        },
+        "comments": {
+          "description": "Additional context describing the event if applicable.",
+          "type": "string"
+        }
+      }
+    },
+    "AttachmentModel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The original name of the file.",
+          "type": "string"
+        },
+        "downloadUri": {
+          "description": "The Uri that will return the bytes of the file for download.",
+          "type": "string"
+        }
+      }
+    },
+    "GetTransactionsResponseModel": {
+      "type": "object",
+      "properties": {
+        "transactions": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/GetTransactionResponseModel" }
+        },
+        "totalRecords": { "format": "int32", "type": "integer" }
+      }
+    },
+    "PostTransactionRequestModelV1": {
+      "description": "Represents a financial transaction.",
+      "required": ["amount", "payer", "emailAddress"],
+      "type": "object",
+      "properties": {
+        "amount": {
+          "format": "double",
+          "description": "Total amount to charge not including any payer fees.",
+          "maximum": 10000000,
+          "type": "number"
+        },
+        "payer": {
+          "description": "Name of the payer that is shown on the receipt.",
+          "type": "string"
+        },
+        "payerFee": {
+          "format": "double",
+          "description": "Used if the calling application has pre-calculated a payer fee. In that case, the fee will not be re-calculated.",
+          "maximum": 10000000,
+          "minimum": 0,
+          "type": "number"
+        },
+        "attributeValues": {
+          "description": "Dictionary of custom attribute values. The key in the dictionary is the identifier of the custom attribute.",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "comments": {
+          "description": "Comments that are shown on the receipt.",
+          "type": "string"
+        },
+        "emailAddress": {
+          "description": "The recipient of the emailed receipt.",
+          "type": "string"
+        },
+        "tokenId": {
+          "description": "Used to reference a previously stored payment token.",
+          "type": "string"
+        },
+        "creditCardInformation": {
+          "$ref": "#/definitions/CreditCardInformationModel",
+          "description": "Used for credit card transactions."
+        },
+        "bankAccountInformation": {
+          "$ref": "#/definitions/BankAccountInformationModel",
+          "description": "Used for eCheck\\ACH transactions."
+        },
+        "authorizationId": {
+          "description": "Used when executing a capture on authorizations that were obtained via this service.",
+          "type": "string"
+        },
+        "sendReceipt": {
+          "description": "Set to true if the payer and account holder(s) should receive an e-receipt.",
+          "type": "boolean"
+        },
+        "initiatingPartyFee": {
+          "format": "double",
+          "description": "The fee being charged by the initiating party of this transaction. This does not include the standard transaction fees.",
+          "type": "number"
+        },
+        "ipAddress": {
+          "description": "The IP Address of the payer.",
+          "type": "string"
+        },
+        "currency": { "enum": ["USD", "CAD"], "type": "string" }
+      }
+    },
+    "PostTransactionResponseModel": {
+      "type": "object",
+      "properties": {
+        "id": { "format": "int64", "type": "integer" },
+        "message": { "type": "string" },
+        "paymentResponseCode": {
+          "enum": [
+            "GenericDecline",
+            "Success",
+            "DoNotHonor",
+            "InvalidAccountNumber",
+            "InsufficientFunds",
+            "DeclineCvvFail",
+            "ExceedsApprovalAmountLimit",
+            "NoSuchIssuer",
+            "InvalidPaymentType",
+            "InvalidExpirationDate",
+            "LostOrStolenCard",
+            "ExpiredCard",
+            "HardDuplicateTransaction",
+            "InvalidToken",
+            "InvalidAuthorization",
+            "InvalidRoutingNumber",
+            "SoftDuplicateTransaction",
+            "CachedPaymentDataExpired",
+            "PaymentMethodBlackListed"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "PostAuthorizeTransactionRequestModel": {
+      "description": "Performs an authorization on a credit card.",
+      "required": ["tokenId", "amount"],
+      "type": "object",
+      "properties": {
+        "tokenId": {
+          "description": "Used to reference a previously stored payment token.",
+          "type": "string"
+        },
+        "amount": {
+          "format": "double",
+          "description": "Total amount to authorize.",
+          "maximum": 10000000,
+          "type": "number"
+        }
+      }
+    },
+    "PostAuthorizeTransactionResponseModel": {
+      "type": "object",
+      "properties": {
+        "id": { "format": "int64", "type": "integer" },
+        "message": { "type": "string" },
+        "paymentResponseCode": {
+          "enum": [
+            "GenericDecline",
+            "Success",
+            "DoNotHonor",
+            "InvalidAccountNumber",
+            "InsufficientFunds",
+            "DeclineCvvFail",
+            "ExceedsApprovalAmountLimit",
+            "NoSuchIssuer",
+            "InvalidPaymentType",
+            "InvalidExpirationDate",
+            "LostOrStolenCard",
+            "ExpiredCard",
+            "HardDuplicateTransaction",
+            "InvalidToken",
+            "InvalidAuthorization",
+            "InvalidRoutingNumber",
+            "SoftDuplicateTransaction",
+            "CachedPaymentDataExpired",
+            "PaymentMethodBlackListed"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "PostRefundTransactionRequestModel": {
+      "description": "Refunds a transaction either partially or in full.",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "format": "double",
+          "description": "The amount to be refunded. Setting to null will process a full refund.",
+          "type": "number"
+        },
+        "sendReceipt": {
+          "description": "Set to true if an e-receipt confirmation should be sent to all parties upon a successful refund.",
+          "type": "boolean"
+        }
+      }
+    },
+    "PostRefundTransactionResponseModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "description": "The Id of the newly created refund transaction.",
+          "type": "integer"
+        },
+        "reversalResponseCode": {
+          "enum": [
+            "GenericDecline",
+            "Success",
+            "PreviouslyVoided",
+            "AlreadySettled",
+            "PreviouslyRejected",
+            "CannotBeVoided"
+          ],
+          "type": "string"
+        }
+      }
+    },
+    "PostVoidTransactionRequestModel": {
+      "description": "Voids a transaction.",
+      "type": "object",
+      "properties": {
+        "sendReceipt": {
+          "description": "Set to true if an e-receipt confirmation should be sent to all parties upon a successful void.",
+          "type": "boolean"
+        }
+      }
+    },
+    "PostVoidTransactionResponseModel": {
+      "type": "object",
+      "properties": {
+        "reversalResponseCode": {
+          "enum": [
+            "GenericDecline",
+            "Success",
+            "PreviouslyVoided",
+            "AlreadySettled",
+            "PreviouslyRejected",
+            "CannotBeVoided"
+          ],
+          "type": "string"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": { "type": "basic", "description": "Basic HTTP Authentication" }
+  }
+}

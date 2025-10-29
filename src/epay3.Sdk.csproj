@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <PackageId>epay3.Sdk</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>epay3</Authors>
+    <Description>Official .NET SDK for the epay3 Payment API</Description>
+    <PackageProjectUrl>https://github.com/epay3/epay3.Sdk</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/epay3/epay3.Sdk</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+
+</Project>
