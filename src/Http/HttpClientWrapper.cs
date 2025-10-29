@@ -30,11 +30,19 @@ namespace epay3.Sdk.Http
             _options = options ?? throw new ArgumentNullException(nameof(options));
             _options.Validate();
 
-            _httpClient = new HttpClient
+            // Create the HttpClient with optional logging handler
+            if (_options.VerboseLogging)
             {
-                BaseAddress = new Uri(_options.BaseUrl),
-                Timeout = TimeSpan.FromSeconds(_options.TimeoutSeconds)
-            };
+                var loggingHandler = new LoggingHandler(new HttpClientHandler());
+                _httpClient = new HttpClient(loggingHandler);
+            }
+            else
+            {
+                _httpClient = new HttpClient();
+            }
+
+            _httpClient.BaseAddress = new Uri(_options.BaseUrl);
+            _httpClient.Timeout = TimeSpan.FromSeconds(_options.TimeoutSeconds);
 
             // Set up Basic Authentication
             var credentials = Convert.ToBase64String(Encoding.ASCII.GetBytes($"{_options.ApiKey}:{_options.ApiSecret}"));

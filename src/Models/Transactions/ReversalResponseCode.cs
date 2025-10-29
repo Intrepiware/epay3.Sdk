@@ -1,8 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace epay3.Sdk.Models
 {
     /// <summary>
     /// Response codes for refund and void operations.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum ReversalResponseCode
     {
         /// <summary>Generic decline</summary>

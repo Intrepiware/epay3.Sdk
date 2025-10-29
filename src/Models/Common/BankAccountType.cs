@@ -1,8 +1,12 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace epay3.Sdk.Models
 {
     /// <summary>
     /// The type of bank account.
     /// </summary>
+    [JsonConverter(typeof(StringEnumConverter))]
     public enum BankAccountType
     {
         /// <summary>Personal checking account</summary>

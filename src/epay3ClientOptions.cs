@@ -30,6 +30,13 @@ namespace epay3.Sdk
         public int TimeoutSeconds { get; set; } = 30;
 
         /// <summary>
+        /// Gets or sets whether to enable verbose logging of HTTP requests and responses.
+        /// When enabled, logs will be written to the console.
+        /// Default is false.
+        /// </summary>
+        public bool VerboseLogging { get; set; } = false;
+
+        /// <summary>
         /// Validates the configuration options.
         /// </summary>
         internal void Validate()

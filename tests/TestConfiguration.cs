@@ -36,7 +36,39 @@ namespace epay3.Sdk.Integration.Tests
                     "API credentials are not configured. Please update appsettings.json with your UAT credentials.");
             }
 
-            return new epay3Client(apiKey, apiSecret, baseUrl);
+            // Check if verbose logging is enabled in configuration
+            var verboseLoggingConfig = Configuration["epay3:VerboseLogging"];
+            var verboseLogging = bool.TryParse(verboseLoggingConfig, out var result) && result;
+
+            return CreateClient(verboseLogging);
+        }
+
+        /// <summary>
+        /// Creates a configured epay3Client for testing with optional verbose logging.
+        /// </summary>
+        /// <param name="verboseLogging">Whether to enable verbose HTTP logging.</param>
+        /// <returns>A configured client instance.</returns>
+        public static epay3Client CreateClient(bool verboseLogging)
+        {
+            var apiKey = Configuration["epay3:ApiKey"];
+            var apiSecret = Configuration["epay3:ApiSecret"];
+            var baseUrl = Configuration["epay3:BaseUrl"];
+
+            if (string.IsNullOrWhiteSpace(apiKey) || string.IsNullOrWhiteSpace(apiSecret))
+            {
+                throw new InvalidOperationException(
+                    "API credentials are not configured. Please update appsettings.json with your UAT credentials.");
+            }
+
+            var options = new epay3ClientOptions
+            {
+                ApiKey = apiKey,
+                ApiSecret = apiSecret,
+                BaseUrl = baseUrl,
+                VerboseLogging = verboseLogging
+            };
+
+            return new epay3Client(options);
         }
 
         /// <summary>
