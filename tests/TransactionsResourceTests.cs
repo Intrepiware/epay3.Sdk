@@ -11,10 +11,35 @@ namespace epay3.Sdk.Integration.Tests
     public class TransactionsResourceTests : IDisposable
     {
         private readonly epay3Client _client;
+        private static readonly Random _random = new Random();
 
         public TransactionsResourceTests()
         {
             _client = TestConfiguration.CreateClient();
+        }
+
+        /// <summary>
+        /// Generates a unique email address to avoid duplicate transaction detection.
+        /// The API checks email+amount for dupes within a 5 minute window.
+        /// </summary>
+        private static string GetUniqueEmail(string baseEmail)
+        {
+            var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            var emailParts = baseEmail.Split('@');
+            if (emailParts.Length == 2)
+            {
+                return $"{emailParts[0]}+{timestamp}@{emailParts[1]}";
+            }
+            return $"{baseEmail}.{timestamp}";
+        }
+
+        /// <summary>
+        /// Generates a unique amount by adding small random cents to avoid duplicate detection.
+        /// </summary>
+        private static double GetUniqueAmount(double baseAmount)
+        {
+            var randomCents = _random.Next(1, 99) / 100.0;
+            return Math.Round(baseAmount + randomCents, 2);
         }
 
         [Fact]
@@ -23,9 +48,9 @@ namespace epay3.Sdk.Integration.Tests
             // Arrange
             var request = new CreateTransactionRequest
             {
-                Amount = 10.00,
+                Amount = GetUniqueAmount(10.00),
                 Payer = "Tom Smith",
-                EmailAddress = "noreply@epay3.com",
+                EmailAddress = GetUniqueEmail("noreply@epay3.com"),
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Tom Smith",
@@ -53,10 +78,11 @@ namespace epay3.Sdk.Integration.Tests
         public async Task CreateTransaction_WithToken_ReturnsSuccess()
         {
             // Arrange - First create a token
+            var uniqueEmail = GetUniqueEmail("tokentest@example.com");
             var tokenRequest = new CreateTokenRequest
             {
                 Payer = "Token Test",
-                EmailAddress = "tokentest@example.com",
+                EmailAddress = uniqueEmail,
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Token Test",
@@ -73,9 +99,9 @@ namespace epay3.Sdk.Integration.Tests
             // Create transaction with token
             var request = new CreateTransactionRequest
             {
-                Amount = 15.00,
+                Amount = GetUniqueAmount(15.00),
                 Payer = "Token Test",
-                EmailAddress = "tokentest@example.com",
+                EmailAddress = uniqueEmail,
                 TokenId = tokenId,
                 Comments = "Transaction using token",
                 SendReceipt = false
@@ -94,11 +120,12 @@ namespace epay3.Sdk.Integration.Tests
         public async Task GetTransaction_WithValidId_ReturnsTransaction()
         {
             // Arrange - First create a transaction
+            var uniqueEmail = GetUniqueEmail("gettest@example.com");
             var createRequest = new CreateTransactionRequest
             {
-                Amount = 20.00,
+                Amount = GetUniqueAmount(20.00),
                 Payer = "Get Test",
-                EmailAddress = "gettest@example.com",
+                EmailAddress = uniqueEmail,
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Get Test",
@@ -120,7 +147,7 @@ namespace epay3.Sdk.Integration.Tests
             Assert.NotNull(transaction);
             Assert.Equal(createResponse.Id, transaction.Id);
             Assert.Equal("Get Test", transaction.Payer);
-            Assert.Equal("gettest@example.com", transaction.EmailAddress);
+            Assert.Equal(uniqueEmail, transaction.EmailAddress);
             Assert.True(transaction.Amount > 0);
         }
 
@@ -131,7 +158,7 @@ namespace epay3.Sdk.Integration.Tests
             var tokenRequest = new CreateTokenRequest
             {
                 Payer = "Auth Test",
-                EmailAddress = "authtest@example.com",
+                EmailAddress = GetUniqueEmail("authtest@example.com"),
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Auth Test",
@@ -148,7 +175,7 @@ namespace epay3.Sdk.Integration.Tests
             var request = new AuthorizeTransactionRequest
             {
                 TokenId = tokenId,
-                Amount = 25.00
+                Amount = GetUniqueAmount(25.00)
             };
 
             // Act
@@ -166,9 +193,9 @@ namespace epay3.Sdk.Integration.Tests
             // Arrange - First create a transaction
             var createRequest = new CreateTransactionRequest
             {
-                Amount = 30.00,
+                Amount = GetUniqueAmount(30.00),
                 Payer = "Void Test",
-                EmailAddress = "voidtest@example.com",
+                EmailAddress = GetUniqueEmail("voidtest@example.com"),
                 CreditCardInformation = new CreditCardInformation
                 {
                     AccountHolder = "Void Test",
