@@ -33,6 +33,11 @@ namespace epay3.Sdk
         public PaymentSchedulesResource PaymentSchedules { get; }
 
         /// <summary>
+        /// Gets the TransactionFees resource for transaction fee calculation operations.
+        /// </summary>
+        public TransactionFeesResource TransactionFees { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="epay3Client"/> class.
         /// </summary>
         /// <param name="apiKey">The API key for authentication.</param>
@@ -64,6 +69,7 @@ namespace epay3.Sdk
             Tokens = new TokensResource(_httpClient);
             AutoPay = new AutoPayResource(_httpClient);
             PaymentSchedules = new PaymentSchedulesResource(_httpClient);
+            TransactionFees = new TransactionFeesResource(_httpClient);
         }
 
         /// <summary>

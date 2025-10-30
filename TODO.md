@@ -29,6 +29,9 @@ This document tracks the implementation progress for the epay3 SDK based on the 
   - ✅ POST `/{id}/cancel` - Cancel AutoPay
   - ✅ POST `/{id}/restart` - Restart AutoPay
 
+- **Transaction Fees Resource** (`/api/v1/transactionFees`)
+  - ✅ GET - Calculate/retrieve transaction fees
+
 ### Infrastructure
 - ✅ camelCase JSON serialization
 - ✅ String enum serialization
@@ -38,13 +41,13 @@ This document tracks the implementation progress for the epay3 SDK based on the 
 
 ---
 
-## 📋 TODO: Phase 1 - Core Payment Features
+## ✅ Phase 1 - Core Payment Features (COMPLETED)
 
 ### Transaction Fees Resource (`/api/v1/transactionFees`)
-- [ ] GET - Calculate/retrieve transaction fees
-- [ ] Create `TransactionFeesResource.cs`
-- [ ] Create response models
-- [ ] Write integration tests
+- ✅ GET - Calculate/retrieve transaction fees
+- ✅ Create `TransactionFeesResource.cs`
+- ✅ Create response models (`GetTransactionFeesResponse`)
+- ✅ Write integration tests (`TransactionFeesResourceTests`)
 
 ---
 
