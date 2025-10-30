@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using epay3.Sdk.Exceptions;
 using epay3.Sdk.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace epay3.Sdk.Http
 {
@@ -28,7 +29,11 @@ namespace epay3.Sdk.Http
         private static readonly JsonSerializerSettings JsonSettings = new JsonSerializerSettings
         {
             ContractResolver = new Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver(),
-            NullValueHandling = NullValueHandling.Ignore
+            NullValueHandling = NullValueHandling.Ignore,
+            Converters = new List<JsonConverter>
+            {
+                new StringEnumConverter(camelCaseText: true)
+            }
         };
 
         /// <summary>

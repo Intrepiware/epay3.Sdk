@@ -23,6 +23,16 @@ namespace epay3.Sdk
         public TokensResource Tokens { get; }
 
         /// <summary>
+        /// Gets the AutoPay resource for AutoPay-related operations.
+        /// </summary>
+        public AutoPayResource AutoPay { get; }
+
+        /// <summary>
+        /// Gets the PaymentSchedules resource for payment schedule-related operations.
+        /// </summary>
+        public PaymentSchedulesResource PaymentSchedules { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="epay3Client"/> class.
         /// </summary>
         /// <param name="apiKey">The API key for authentication.</param>
@@ -52,6 +62,8 @@ namespace epay3.Sdk
             // Initialize resources
             Transactions = new TransactionsResource(_httpClient);
             Tokens = new TokensResource(_httpClient);
+            AutoPay = new AutoPayResource(_httpClient);
+            PaymentSchedules = new PaymentSchedulesResource(_httpClient);
         }
 
         /// <summary>
