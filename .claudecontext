@@ -1,0 +1,194 @@
+# epay3 SDK - Claude Context
+
+## Project Overview
+This is a .NET SDK for the ePayPolicy payment processing API. It provides a strongly-typed C# client for processing credit card and ACH/eCheck payments, managing tokens, payment schedules, and AutoPay subscriptions.
+
+**Target Framework:** .NET 8.0
+**API Documentation:** swagger.json in repo root
+**Demo Environment:** https://api.epaypolicydemo.com
+
+## Architecture & Patterns
+
+### Resource Pattern
+Each API endpoint group is implemented as a Resource class:
+- `TokensResource` - Token management
+- `TransactionsResource` - Payment processing
+- `PaymentSchedulesResource` - Recurring payments
+- `AutoPayResource` - Automated billing
+- Located in: `src/Resources/`
+
+### Client Structure
+```
+epay3Client
+  ├── Transactions (TransactionsResource)
+  ├── Tokens (TokensResource)
+  ├── AutoPay (AutoPayResource)
+  └── PaymentSchedules (PaymentSchedulesResource)
+```
+
+### HTTP Communication
+- `HttpClientWrapper` (src/Http/HttpClientWrapper.cs) handles all HTTP calls
+- Uses Basic Authentication (ApiKey:ApiSecret as base64)
+- Supports optional impersonation via header
+- Optional verbose logging via `LoggingHandler` (set `VerboseLogging: true` in options)
+
+## Critical Conventions
+
+### JSON Serialization
+**ALWAYS use camelCase** - The API expects camelCase property names:
+- Configured in `HttpClientWrapper.JsonSettings` (line 29-37)
+- Uses `CamelCasePropertyNamesContractResolver`
+- `NullValueHandling.Ignore` to omit null values
+
+### Enum Serialization
+**ALWAYS serialize as camelCase strings, never integers:**
+- Global converter: `new StringEnumConverter(camelCaseText: true)`
+- Examples:
+  - `PaymentInterval.Month` → `"month"`
+  - `BankAccountType.PersonalChecking` → `"personalChecking"`
+  - `PaymentResponseCode.Success` → `"success"`
+
+### Empty Response Handling
+Many POST endpoints return 201 with empty body but Location header containing ID:
+- `HttpClientWrapper.SendRequestAsync<T>` (line 221-299) handles this
+- Automatically extracts ID from Location header
+- Sets `PaymentResponseCode.Success` for successful empty responses
+- Creates new instance instead of returning null
+
+## Model Organization
+
+```
+src/Models/
+  ├── Common/           # Shared models (enums, base classes)
+  ├── Tokens/           # Token-related request/response models
+  ├── Transactions/     # Transaction-related models
+  ├── PaymentSchedules/ # Payment schedule models
+  └── AutoPay/          # AutoPay models
+```
+
+**Naming Convention:**
+- Request models: `Create{Resource}Request`, `Search{Resource}Request`
+- Response models: `{Resource}Response`, `Get{Resource}Response`
+- List items: `{Resource}ListItem`
+
+## Testing Approach
+
+### Test Location
+All integration tests in `tests/` directory
+
+### Fuzzing Helpers (CRITICAL)
+**Always use fuzzing to avoid duplicate detection** - API blocks duplicates for 5 minutes:
+
+```csharp
+// Email fuzzing - uses + notation with timestamp
+private static string GetUniqueEmail(string baseEmail)
+{
+    var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    var emailParts = baseEmail.Split('@');
+    return $"{emailParts[0]}+{timestamp}@{emailParts[1]}";
+}
+
+// Amount fuzzing - adds random cents
+private static double GetUniqueAmount(double baseAmount)
+{
+    var randomCents = _random.Next(1, 99) / 100.0;
+    return Math.Round(baseAmount + randomCents, 2);
+}
+
+// Attribute fuzzing - for AutoPay
+private static Dictionary<string, string> GetUniqueAttributes() =>
+    new Dictionary<string, string>
+    {
+        { "accountCode", "123" },
+        { "postalCode", Guid.NewGuid().ToString("n").Substring(0, 8) }
+    };
+```
+
+### Test Constants
+```csharp
+private const string TestCreditCardNumber = "5454545454545454";
+private const string TestCvcNumber = "999";
+```
+
+### Test Configuration
+- Settings in `tests/appsettings.json`
+- `VerboseLogging: true` to see HTTP requests/responses in console
+- Use `TestConfiguration.CreateClient()` to get configured client
+
+## Common Issues & Solutions
+
+### Issue: Enum sent as integer instead of string
+**Solution:** Ensure `StringEnumConverter(camelCaseText: true)` is in `JsonSettings.Converters`
+
+### Issue: 500 error on API call
+**Solution:**
+1. Enable verbose logging to see actual request/response
+2. Check JSON casing (should be camelCase)
+3. Verify required fields are populated
+4. Check enum values are strings, not integers
+
+### Issue: Duplicate transaction detection
+**Solution:** Use fuzzing helpers for email and amount in tests
+
+### Issue: Test expects non-null response but gets null
+**Solution:** Check `HttpClientWrapper.SendRequestAsync<T>` empty response handling
+
+## Development Workflow
+
+### Adding a New Resource
+1. Analyze swagger.json for endpoints and models
+2. Create models in `src/Models/{ResourceName}/`
+3. Create `{ResourceName}Resource.cs` in `src/Resources/`
+4. Wire up in `epay3Client.cs` constructor
+5. Create `{ResourceName}ResourceTests.cs` in `tests/`
+6. Update TODO.md
+
+### Adding a New Model
+- Use proper XML documentation
+- Use nullable types for optional fields (`int?`, `DateTime?`)
+- Use `Dictionary<string, string>` for attribute collections
+- Follow existing naming conventions
+
+### Running Tests
+```bash
+# All tests
+dotnet test
+
+# Specific test class
+dotnet test --filter "FullyQualifiedName~{ClassName}"
+
+# Single test
+dotnet test --filter "FullyQualifiedName~{ClassName}.{MethodName}"
+```
+
+## Key Decisions Made
+
+1. **Manual implementation over code generation** - Better control and code quality
+2. **camelCase JSON** - API requirement
+3. **String enums with camelCase** - API requirement
+4. **Fuzzing in tests** - Avoid duplicate detection failures
+5. **Empty response handling** - Handle 201 with Location header pattern
+6. **Verbose logging optional** - Debug-friendly without cluttering normal usage
+
+## Important Files
+
+- `swagger.json` - API specification
+- `TODO.md` - Implementation roadmap
+- `src/epay3Client.cs` - Main client entry point
+- `src/Http/HttpClientWrapper.cs` - HTTP layer (JSON settings here!)
+- `tests/TestConfiguration.cs` - Test setup
+
+## External Resources
+
+- API Docs: swagger.json (in repo)
+- Demo Portal: https://api.epaypolicydemo.com
+- Support: support@epay3.com
+
+## Notes for AI Assistants
+
+- Always check existing patterns before implementing new features
+- Use fuzzing helpers in ALL tests that create transactions/autopays
+- Never hardcode test data that could cause duplicates
+- Follow the Resource pattern for all API endpoints
+- Maintain consistent XML documentation style
+- Test both success and error cases
