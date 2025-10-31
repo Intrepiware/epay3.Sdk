@@ -1,6 +1,8 @@
 # epay3 SDK for .NET
 
-Official .NET SDK for the epay3 Payment API.
+Unofficial .NET SDK for the epay3 Payment API. This SDK was created by an ePay3 developer, but it is an experimental project meant to test building with [Claude Code](https://claude.ai). 
+
+It is currently untested, and not recommended for use in Production environments.
 
 ## Features
 
