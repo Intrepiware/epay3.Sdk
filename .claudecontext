@@ -3,7 +3,7 @@
 ## Project Overview
 This is a .NET SDK for the ePayPolicy payment processing API. It provides a strongly-typed C# client for processing credit card and ACH/eCheck payments, managing tokens, payment schedules, and AutoPay subscriptions.
 
-**Target Framework:** .NET 8.0
+**Target Framework:** .NET Standard 2.0 (SDK), .NET 8.0 (Tests)
 **API Documentation:** swagger.json in repo root
 **Demo Environment:** https://api.epaypolicydemo.com
 
@@ -16,7 +16,7 @@ Each API endpoint group is implemented as a Resource class:
 - `PaymentSchedulesResource` - Recurring payments
 - `AutoPayResource` - Automated billing
 - `BatchesResource` - Batch information
-- Located in: `src/Resources/`
+- Located in: `epay3.Sdk/Resources/`
 
 ### Client Structure
 ```
@@ -30,7 +30,7 @@ epay3Client
 ```
 
 ### HTTP Communication
-- `HttpClientWrapper` (src/Http/HttpClientWrapper.cs) handles all HTTP calls
+- `HttpClientWrapper` (epay3.Sdk/Http/HttpClientWrapper.cs) handles all HTTP calls
 - Uses Basic Authentication (ApiKey:ApiSecret as base64)
 - Supports optional impersonation via header
 - Optional verbose logging via `LoggingHandler` (set `VerboseLogging: true` in options)
@@ -77,12 +77,14 @@ Please run dotnet format before committing to ensure consistent code style.
 ## Model Organization
 
 ```
-src/Models/
+epay3.Sdk/Models/
   ├── Common/           # Shared models (enums, base classes)
   ├── Tokens/           # Token-related request/response models
   ├── Transactions/     # Transaction-related models
   ├── PaymentSchedules/ # Payment schedule models
-  └── AutoPay/          # AutoPay models
+  ├── AutoPay/          # AutoPay models
+  ├── Batches/          # Batch models
+  └── TransactionFees/  # Transaction fee models
 ```
 
 **Naming Convention:**
@@ -93,7 +95,7 @@ src/Models/
 ## Testing Approach
 
 ### Test Location
-All integration tests in `tests/` directory
+All integration tests in `epay3.Sdk.Integration.Tests/` directory
 
 ### Fuzzing Helpers (CRITICAL)
 **Always use fuzzing to avoid duplicate detection** - API blocks duplicates for 5 minutes:
@@ -102,7 +104,7 @@ All integration tests in `tests/` directory
 // Email fuzzing - uses + notation with timestamp
 private static string GetUniqueEmail(string baseEmail)
 {
-    var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+ var timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     var emailParts = baseEmail.Split('@');
     return $"{emailParts[0]}+{timestamp}@{emailParts[1]}";
 }
@@ -118,7 +120,7 @@ private static decimal GetUniqueAmount(decimal baseAmount)
 private static Dictionary<string, string> GetUniqueAttributes() =>
     new Dictionary<string, string>
     {
-        { "accountCode", "123" },
+    { "accountCode", "123" },
         { "postalCode", Guid.NewGuid().ToString("n").Substring(0, 8) }
     };
 ```
@@ -130,7 +132,7 @@ private const string TestCvcNumber = "999";
 ```
 
 ### Test Configuration
-- Settings in `tests/appsettings.json`
+- Settings in `epay3.Sdk.Integration.Tests/appsettings.json`
 - `VerboseLogging: true` to see HTTP requests/responses in console
 - Use `TestConfiguration.CreateClient()` to get configured client
 
@@ -156,10 +158,10 @@ private const string TestCvcNumber = "999";
 
 ### Adding a New Resource
 1. Analyze swagger.json for endpoints and models
-2. Create models in `src/Models/{ResourceName}/`
-3. Create `{ResourceName}Resource.cs` in `src/Resources/`
+2. Create models in `epay3.Sdk/Models/{ResourceName}/`
+3. Create `{ResourceName}Resource.cs` in `epay3.Sdk/Resources/`
 4. Wire up in `epay3Client.cs` constructor
-5. Create `{ResourceName}ResourceTests.cs` in `tests/`
+5. Create `{ResourceName}ResourceTests.cs` in `epay3.Sdk.Integration.Tests/`
 6. Update TODO.md
 
 ### Adding a New Model
@@ -192,11 +194,12 @@ dotnet test --filter "FullyQualifiedName~{ClassName}.{MethodName}"
 
 ## Important Files
 
-- `swagger.json` - API specification
-- `TODO.md` - Implementation roadmap
-- `src/epay3Client.cs` - Main client entry point
-- `src/Http/HttpClientWrapper.cs` - HTTP layer (JSON settings here!)
-- `tests/TestConfiguration.cs` - Test setup
+- `swagger.json` - API specification (repo root)
+- `TODO.md` - Implementation roadmap (repo root)
+- `epay3.Sdk/epay3Client.cs` - Main client entry point
+- `epay3.Sdk/Http/HttpClientWrapper.cs` - HTTP layer (JSON settings here!)
+- `epay3.Sdk.Integration.Tests/TestConfiguration.cs` - Test setup
+- `epay3.Sdk.Integration.Tests/appsettings.json` - Test configuration
 
 ## External Resources
 

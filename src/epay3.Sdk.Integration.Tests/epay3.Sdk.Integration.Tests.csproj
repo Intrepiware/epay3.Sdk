@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../src/epay3.Sdk.csproj" />
+    <ProjectReference Include="..\epay3.Sdk\epay3.Sdk.csproj" />
   </ItemGroup>
 
   <ItemGroup>
