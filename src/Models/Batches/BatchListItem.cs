@@ -24,9 +24,9 @@ namespace epay3.Sdk.Models
         public int NumberOfCredits { get; set; }
 
         /// <summary>
-     /// Gets or sets the total amount of credit transactions.
-    /// </summary>
-  public decimal TotalOfCredits { get; set; }
+        /// Gets or sets the total amount of credit transactions.
+        /// </summary>
+      public decimal TotalOfCredits { get; set; }
 
         /// <summary>
         /// Gets or sets the number of debit transactions in the batch.
@@ -35,8 +35,8 @@ namespace epay3.Sdk.Models
 
         /// <summary>
         /// Gets or sets the total amount of debit transactions.
-      /// </summary>
- public decimal TotalOfDebits { get; set; }
+        /// </summary>
+        public decimal TotalOfDebits { get; set; }
 
         /// <summary>
         /// Gets or sets the currency for the batch.

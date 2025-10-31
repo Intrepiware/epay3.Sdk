@@ -9,7 +9,7 @@ namespace epay3.Sdk.Models
     {
         /// <summary>
         /// Gets or sets the total amount to charge not including any payer fees.
-/// Required.
+        /// Required.
         /// </summary>
         public decimal Amount { get; set; }
 
@@ -28,8 +28,8 @@ namespace epay3.Sdk.Models
         /// <summary>
         /// Gets or sets the pre-calculated payer fee.
         /// If set, the fee will not be re-calculated.
- /// </summary>
-     public decimal? PayerFee { get; set; }
+        /// </summary>
+        public decimal? PayerFee { get; set; }
 
         /// <summary>
         /// Gets or sets comments shown on the receipt.
@@ -64,8 +64,8 @@ namespace epay3.Sdk.Models
         /// <summary>
         /// Gets or sets the fee charged by the initiating party.
         /// This does not include standard transaction fees.
-     /// </summary>
-  public decimal? InitiatingPartyFee { get; set; }
+        /// </summary>
+        public decimal? InitiatingPartyFee { get; set; }
 
         /// <summary>
         /// Gets or sets the IP address of the payer.
