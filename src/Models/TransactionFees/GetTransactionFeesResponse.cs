@@ -6,13 +6,13 @@ namespace epay3.Sdk.Models
     public class GetTransactionFeesResponse
     {
         /// <summary>
-        /// Gets or sets the ACH payer fee for the specified transaction amount.
+    /// Gets or sets the ACH payer fee for the specified transaction amount.
         /// </summary>
-        public double AchPayerFee { get; set; }
+        public decimal AchPayerFee { get; set; }
 
         /// <summary>
         /// Gets or sets the credit card payer fee for the specified transaction amount.
         /// </summary>
-        public double CreditCardPayerFee { get; set; }
+  public decimal CreditCardPayerFee { get; set; }
     }
 }

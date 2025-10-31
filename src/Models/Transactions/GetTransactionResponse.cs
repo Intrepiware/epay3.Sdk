@@ -32,20 +32,20 @@ namespace epay3.Sdk.Models
         /// </summary>
         public TransactionType TransactionType { get; set; }
 
-        /// <summary>
+     /// <summary>
         /// Gets or sets the total amount charged to the payer including all fees.
         /// </summary>
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         /// <summary>
-        /// Gets or sets the transaction fee charged.
-        /// </summary>
-        public double Fee { get; set; }
+  /// Gets or sets the transaction fee charged.
+  /// </summary>
+        public decimal Fee { get; set; }
 
-        /// <summary>
-        /// Gets or sets the fee charged to the payer.
+      /// <summary>
+  /// Gets or sets the fee charged to the payer.
         /// </summary>
-        public double PayerFee { get; set; }
+        public decimal PayerFee { get; set; }
 
         /// <summary>
         /// Gets or sets the masked account number.

@@ -15,6 +15,7 @@ Each API endpoint group is implemented as a Resource class:
 - `TransactionsResource` - Payment processing
 - `PaymentSchedulesResource` - Recurring payments
 - `AutoPayResource` - Automated billing
+- `BatchesResource` - Batch information
 - Located in: `src/Resources/`
 
 ### Client Structure
@@ -23,7 +24,9 @@ epay3Client
   ├── Transactions (TransactionsResource)
   ├── Tokens (TokensResource)
   ├── AutoPay (AutoPayResource)
-  └── PaymentSchedules (PaymentSchedulesResource)
+  ├── PaymentSchedules (PaymentSchedulesResource)
+  ├── TransactionFees (TransactionFeesResource)
+  └── Batches (BatchesResource)
 ```
 
 ### HTTP Communication
@@ -33,6 +36,18 @@ epay3Client
 - Optional verbose logging via `LoggingHandler` (set `VerboseLogging: true` in options)
 
 ## Critical Conventions
+
+### Monetary Amounts
+**ALWAYS use decimal type for monetary amounts, NEVER double or float:**
+- All amount properties must be `decimal` or `decimal?` for nullable
+- In test code, use decimal literals with `m` suffix: `10.00m`, not `10.00`
+- Examples:
+  - ✅ `public decimal Amount { get; set; }`
+  - ✅ `var amount = 100.50m;`
+  - ❌ `public double Amount { get; set; }`
+  - ❌ `var amount = 100.50;`
+- Applies to: Amount, Fee, PayerFee, InitiatingPartyFee, TotalOfCredits, TotalOfDebits, etc.
+- **Rationale:** Decimal provides exact precision for financial calculations, avoiding floating-point rounding errors
 
 ### JSON Serialization
 **ALWAYS use camelCase** - The API expects camelCase property names:
@@ -47,6 +62,7 @@ epay3Client
   - `PaymentInterval.Month` → `"month"`
   - `BankAccountType.PersonalChecking` → `"personalChecking"`
   - `PaymentResponseCode.Success` → `"success"`
+  - `Currency.USD` → `"usd"`
 
 ### Empty Response Handling
 Many POST endpoints return 201 with empty body but Location header containing ID:
@@ -88,10 +104,10 @@ private static string GetUniqueEmail(string baseEmail)
     return $"{emailParts[0]}+{timestamp}@{emailParts[1]}";
 }
 
-// Amount fuzzing - adds random cents
-private static double GetUniqueAmount(double baseAmount)
+// Amount fuzzing - adds random cents (always use decimal for monetary amounts)
+private static decimal GetUniqueAmount(decimal baseAmount)
 {
-    var randomCents = _random.Next(1, 99) / 100.0;
+    var randomCents = _random.Next(1, 99) / 100.0m;
     return Math.Round(baseAmount + randomCents, 2);
 }
 
@@ -164,11 +180,12 @@ dotnet test --filter "FullyQualifiedName~{ClassName}.{MethodName}"
 ## Key Decisions Made
 
 1. **Manual implementation over code generation** - Better control and code quality
-2. **camelCase JSON** - API requirement
-3. **String enums with camelCase** - API requirement
-4. **Fuzzing in tests** - Avoid duplicate detection failures
-5. **Empty response handling** - Handle 201 with Location header pattern
-6. **Verbose logging optional** - Debug-friendly without cluttering normal usage
+2. **decimal for monetary amounts** - Use decimal type (never double/float) for exact financial precision
+3. **camelCase JSON** - API requirement
+4. **String enums with camelCase** - API requirement
+5. **Fuzzing in tests** - Avoid duplicate detection failures
+6. **Empty response handling** - Handle 201 with Location header pattern
+7. **Verbose logging optional** - Debug-friendly without cluttering normal usage
 
 ## Important Files
 
@@ -186,6 +203,7 @@ dotnet test --filter "FullyQualifiedName~{ClassName}.{MethodName}"
 
 ## Notes for AI Assistants
 
+- **ALWAYS use `decimal` for monetary amounts** - Never use double or float. Use `m` suffix in test literals.
 - Always check existing patterns before implementing new features
 - Use fuzzing helpers in ALL tests that create transactions/autopays
 - Never hardcode test data that could cause duplicates

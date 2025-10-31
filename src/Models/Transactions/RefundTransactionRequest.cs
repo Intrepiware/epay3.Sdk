@@ -9,7 +9,7 @@ namespace epay3.Sdk.Models
         /// Gets or sets the amount to refund.
         /// If null, a full refund will be processed.
         /// </summary>
-        public double? Amount { get; set; }
+        public decimal? Amount { get; set; }
 
         /// <summary>
         /// Gets or sets whether to send an e-receipt to all parties upon successful refund.

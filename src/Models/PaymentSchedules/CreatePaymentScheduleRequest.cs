@@ -27,10 +27,10 @@ namespace epay3.Sdk.Models
         public string TokenId { get; set; }
 
         /// <summary>
-        /// Gets or sets the amount of each recurring payment.
+    /// Gets or sets the amount of each recurring payment.
         /// Required. Maximum 10,000,000.
         /// </summary>
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
 
         /// <summary>
         /// Gets or sets the interval by which the payments should be run.
@@ -73,12 +73,12 @@ namespace epay3.Sdk.Models
         /// </summary>
         public string Comments { get; set; }
 
-        /// <summary>
+ /// <summary>
         /// Gets or sets the fee being charged by the initiating party of this transaction.
-        /// This does not include the standard transaction fees.
+ /// This does not include the standard transaction fees.
         /// Maximum 1,000,000, minimum 0.
         /// </summary>
-        public double? InitiatingPartyFee { get; set; }
+    public decimal? InitiatingPartyFee { get; set; }
 
         /// <summary>
         /// Gets or sets the IP Address of the payer.

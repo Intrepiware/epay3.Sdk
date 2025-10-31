@@ -12,7 +12,7 @@ namespace epay3.Sdk.Models
 
         /// <summary>
         /// Gets or sets the amount for this division.
-        /// </summary>
-        public double Amount { get; set; }
+  /// </summary>
+        public decimal Amount { get; set; }
     }
 }

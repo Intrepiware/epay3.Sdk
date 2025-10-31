@@ -17,16 +17,16 @@ namespace epay3.Sdk.Resources
             _http = http;
         }
 
-        /// <summary>
+     /// <summary>
         /// Calculates and returns transaction fees for a given net amount due based on the account.
-        /// </summary>
+   /// </summary>
         /// <param name="amount">Net amount due from which to calculate the transaction fees.</param>
-        /// <param name="impersonationAccountKey">Optional account key for impersonation.</param>
+      /// <param name="impersonationAccountKey">Optional account key for impersonation.</param>
         /// <param name="cancellationToken">Cancellation token.</param>
         /// <returns>The calculated transaction fees for ACH and credit card payments.</returns>
         public async Task<GetTransactionFeesResponse> GetAsync(
-            double amount,
-            string impersonationAccountKey = null,
+  decimal amount,
+      string impersonationAccountKey = null,
             CancellationToken cancellationToken = default)
         {
             return await _http.GetAsync<GetTransactionFeesResponse>(

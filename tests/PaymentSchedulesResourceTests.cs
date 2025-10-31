@@ -36,12 +36,12 @@ namespace epay3.Sdk.Integration.Tests
 
         /// <summary>
         /// Generates a unique amount by adding small random cents.
-        /// </summary>
-        private static double GetUniqueAmount(double baseAmount)
-        {
-            var randomCents = _random.Next(1, 99) / 100.0;
-            return Math.Round(baseAmount + randomCents, 2);
-        }
+  /// </summary>
+  private static decimal GetUniqueAmount(decimal baseAmount)
+     {
+   var randomCents = _random.Next(1, 99) / 100.0m;
+       return Math.Round(baseAmount + randomCents, 2);
+    }
 
         [Fact]
         public async Task CreatePaymentSchedule_WithMonthlyInterval_ReturnsScheduleId()
@@ -69,7 +69,7 @@ namespace epay3.Sdk.Integration.Tests
                 Payer = "Schedule Test",
                 EmailAddress = GetUniqueEmail("scheduletest@example.com"),
                 TokenId = tokenId,
-                Amount = GetUniqueAmount(50.00),
+        Amount = GetUniqueAmount(50.00m),
                 Interval = PaymentInterval.Month,
                 IntervalCount = 1,
                 NumberOfTotalPayments = 6,
@@ -112,7 +112,7 @@ namespace epay3.Sdk.Integration.Tests
                 Payer = "Get Schedule Test",
                 EmailAddress = uniqueEmail,
                 TokenId = tokenId,
-                Amount = GetUniqueAmount(75.00),
+     Amount = GetUniqueAmount(75.00m),
                 Interval = PaymentInterval.Month,
                 IntervalCount = 2,
                 NumberOfTotalPayments = 4
@@ -160,7 +160,7 @@ namespace epay3.Sdk.Integration.Tests
                 Payer = "Cancel Schedule Test",
                 EmailAddress = GetUniqueEmail("cancelschedule@example.com"),
                 TokenId = tokenId,
-                Amount = GetUniqueAmount(100.00),
+         Amount = GetUniqueAmount(100.00m),
                 Interval = PaymentInterval.Day,
                 IntervalCount = 30,
                 StartDate = DateTime.Now.AddDays(30) // Future start date to avoid immediate processing
