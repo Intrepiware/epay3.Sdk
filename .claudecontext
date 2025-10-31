@@ -71,6 +71,9 @@ Many POST endpoints return 201 with empty body but Location header containing ID
 - Sets `PaymentResponseCode.Success` for successful empty responses
 - Creates new instance instead of returning null
 
+### Formatting
+Please run dotnet format before committing to ensure consistent code style.
+
 ## Model Organization
 
 ```

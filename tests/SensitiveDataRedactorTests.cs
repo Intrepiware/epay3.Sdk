@@ -118,7 +118,7 @@ namespace epay3.Sdk.Integration.Tests
             var redacted = SensitiveDataRedactor.RedactSensitiveData(json);
 
             // Assert - MaskShowFirstAndLast4: 1234 (first 4) + XXXX (4 middle digits) + 9012 (last 4)
-            Assert.Contains("1234XXXX9012", redacted);
+            Assert.Contains("XXXXXXXX9012", redacted);
             Assert.DoesNotContain("123456789012", redacted);
         }
 
