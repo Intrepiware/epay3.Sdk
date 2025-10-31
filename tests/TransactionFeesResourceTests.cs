@@ -16,14 +16,14 @@ namespace epay3.Sdk.Integration.Tests
             _client = TestConfiguration.CreateClient();
         }
 
-    [Fact]
+        [Fact]
         public async Task GetTransactionFees_WithValidAmount_ReturnsFeesCalculation()
         {
-   // Arrange
-     var amount = 100.00m;
+            // Arrange
+            var amount = 100.00m;
 
-// Act
-       var fees = await _client.TransactionFees.GetAsync(amount);
+            // Act
+            var fees = await _client.TransactionFees.GetAsync(amount);
 
             // Assert
             Assert.NotNull(fees);
@@ -35,10 +35,10 @@ namespace epay3.Sdk.Integration.Tests
         public async Task GetTransactionFees_WithDifferentAmounts_ReturnsProportionalFees()
         {
             // Arrange
-  var smallAmount = 50.00m;
-   var largeAmount = 500.00m;
+            var smallAmount = 50.00m;
+            var largeAmount = 500.00m;
 
-       // Act
+            // Act
             var smallFees = await _client.TransactionFees.GetAsync(smallAmount);
             var largeFees = await _client.TransactionFees.GetAsync(largeAmount);
 
@@ -54,13 +54,13 @@ namespace epay3.Sdk.Integration.Tests
         }
 
         [Fact]
- public async Task GetTransactionFees_WithZeroAmount_ReturnsValidResponse()
-   {
-    // Arrange
-    var amount = 0.00m;
+        public async Task GetTransactionFees_WithZeroAmount_ReturnsValidResponse()
+        {
+            // Arrange
+            var amount = 0.00m;
 
             // Act
-        var fees = await _client.TransactionFees.GetAsync(amount);
+            var fees = await _client.TransactionFees.GetAsync(amount);
 
             // Assert
             Assert.NotNull(fees);

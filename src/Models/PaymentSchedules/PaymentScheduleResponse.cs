@@ -39,18 +39,18 @@ namespace epay3.Sdk.Models
         /// </summary>
         public int? NumberOfExecutedPayments { get; set; }
 
-     /// <summary>
+        /// <summary>
         /// Gets or sets the amount of each recurring payment.
-      /// </summary>
+        /// </summary>
         public decimal? Amount { get; set; }
 
         /// <summary>
-      /// Gets or sets the payer fee.
-  /// Used if the calling application has pre-calculated a payer fee.
-  /// In that case, the fee will not be re-calculated.
-   /// This amount, if set, will not be added to the amount field prior to processing.
-   /// </summary>
-      public decimal? PayerFee { get; set; }
+        /// Gets or sets the payer fee.
+        /// Used if the calling application has pre-calculated a payer fee.
+        /// In that case, the fee will not be re-calculated.
+        /// This amount, if set, will not be added to the amount field prior to processing.
+        /// </summary>
+        public decimal? PayerFee { get; set; }
 
         /// <summary>
         /// Gets or sets the date of the initial payment.

@@ -12,7 +12,7 @@ namespace epay3.Sdk.Models
         public string TokenId { get; set; }
 
         /// <summary>
-   /// Gets or sets the total amount to authorize.
+        /// Gets or sets the total amount to authorize.
         /// Required.
         /// </summary>
         public decimal Amount { get; set; }

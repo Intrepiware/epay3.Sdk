@@ -38,7 +38,7 @@ namespace epay3.Sdk.Integration.Tests
         /// Generates unique attributes to avoid AutoPay duplicate detection.
         /// </summary>
         private static Dictionary<string, string> GetUniqueAttributes() => new Dictionary<string, string> { { "accountCode", "123" }, { "postalCode", Guid.NewGuid().ToString("n").Substring(0, 8) } };
-        
+
 
         [Fact]
         public async Task CreateAutoPay_WithValidToken_ReturnsAutoPayId()

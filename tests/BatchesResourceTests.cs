@@ -35,12 +35,12 @@ namespace epay3.Sdk.Integration.Tests
         }
 
         /// <summary>
- /// Generates a unique amount to avoid duplicate detection.
+        /// Generates a unique amount to avoid duplicate detection.
         /// </summary>
-   private static decimal GetUniqueAmount(decimal baseAmount)
+        private static decimal GetUniqueAmount(decimal baseAmount)
         {
- var randomCents = _random.Next(1, 99) / 100.0m;
-    return Math.Round(baseAmount + randomCents, 2);
+            var randomCents = _random.Next(1, 99) / 100.0m;
+            return Math.Round(baseAmount + randomCents, 2);
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace epay3.Sdk.Integration.Tests
             // Arrange - Create a transaction first to ensure we have at least one batch
             var transactionRequest = new CreateTransactionRequest
             {
-            Amount = GetUniqueAmount(10.00m),
+                Amount = GetUniqueAmount(10.00m),
                 Payer = "Batch Test",
                 EmailAddress = GetUniqueEmail("batchtest@example.com"),
                 CreditCardInformation = new CreditCardInformation
@@ -121,7 +121,7 @@ namespace epay3.Sdk.Integration.Tests
             // Arrange - Create a transaction to ensure batches exist
             var transactionRequest = new CreateTransactionRequest
             {
-     Amount = GetUniqueAmount(15.00m),
+                Amount = GetUniqueAmount(15.00m),
                 Payer = "Batch Props Test",
                 EmailAddress = GetUniqueEmail("batchprops@example.com"),
                 CreditCardInformation = new CreditCardInformation
