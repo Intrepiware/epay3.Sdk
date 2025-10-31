@@ -24,13 +24,20 @@ This document tracks the implementation progress for the epay3 SDK based on the 
 
 - **AutoPay Resource** (`/api/v1/autoPay`)
   - ✅ GET `/{id}` - Get AutoPay details
-  - ✅ GET `/autoPays` - Search AutoPays (with filters)
+- ✅ GET `/autoPays` - Search AutoPays (with filters)
   - ✅ POST - Create AutoPay
   - ✅ POST `/{id}/cancel` - Cancel AutoPay
   - ✅ POST `/{id}/restart` - Restart AutoPay
 
 - **Transaction Fees Resource** (`/api/v1/transactionFees`)
   - ✅ GET - Calculate/retrieve transaction fees
+
+- **Batches Resource** (`/api/v1/batches`)
+  - ✅ GET - Get batches with pagination
+  - ✅ Create `BatchesResource.cs`
+  - ✅ Create response models (`GetBatchesResponse`, `BatchListItem`, `Division`)
+  - ✅ Create common models (`Currency` enum)
+  - ✅ Write integration tests (`BatchesResourceTests`)
 
 ### Infrastructure
 - ✅ camelCase JSON serialization
@@ -85,15 +92,6 @@ This document tracks the implementation progress for the epay3 SDK based on the 
 ---
 
 ## 📋 TODO: Phase 3 - Supporting Features
-
-### Batches Resource (`/api/v1/batches`)
-- [ ] GET - Get batches with date filters
-- [ ] Create `BatchesResource.cs`
-- [ ] Create request/response models:
-  - [ ] `GetBatchesRequest`
-  - [ ] `GetBatchesResponse`
-  - [ ] `BatchListItemModel`
-- [ ] Write integration tests
 
 ### Token Page Sessions Resource (`/api/v1/tokenPageSessions`)
 - [ ] POST - Create token page session (hosted payment page)

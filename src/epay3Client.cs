@@ -38,6 +38,11 @@ namespace epay3.Sdk
         public TransactionFeesResource TransactionFees { get; }
 
         /// <summary>
+        /// Gets the Batches resource for batch-related operations.
+        /// </summary>
+        public BatchesResource Batches { get; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="epay3Client"/> class.
         /// </summary>
         /// <param name="apiKey">The API key for authentication.</param>
@@ -70,6 +75,7 @@ namespace epay3.Sdk
             AutoPay = new AutoPayResource(_httpClient);
             PaymentSchedules = new PaymentSchedulesResource(_httpClient);
             TransactionFees = new TransactionFeesResource(_httpClient);
+            Batches = new BatchesResource(_httpClient);
         }
 
         /// <summary>
