@@ -1,3 +1,5 @@
+using epay3.Sdk.Attributes;
+
 namespace epay3.Sdk.Models
 {
     /// <summary>
@@ -33,6 +35,7 @@ namespace epay3.Sdk.Models
         /// <summary>
         /// Gets or sets the bank account number.
         /// </summary>
+        [SensitiveData(RedactionMode.MaskShowLast4)]
         public string AccountNumber { get; set; }
     }
 }

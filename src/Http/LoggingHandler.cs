@@ -8,6 +8,7 @@ namespace epay3.Sdk.Http
 {
     /// <summary>
     /// HTTP message handler that logs requests and responses to the console for debugging.
+    /// Sensitive payment information (credit card numbers, CVCs, account numbers) is redacted.
     /// </summary>
     internal class LoggingHandler : DelegatingHandler
     {
@@ -83,7 +84,8 @@ namespace epay3.Sdk.Http
                 if (!string.IsNullOrEmpty(content))
                 {
                     sb.AppendLine("\nBody:");
-                    sb.AppendLine(content);
+                    // Redact sensitive payment information before logging
+                    sb.AppendLine(SensitiveDataRedactor.RedactSensitiveData(content));
                 }
             }
 
@@ -121,7 +123,8 @@ namespace epay3.Sdk.Http
                 if (!string.IsNullOrEmpty(content))
                 {
                     sb.AppendLine("\nBody:");
-                    sb.AppendLine(content);
+                    // Redact sensitive payment information before logging
+                    sb.AppendLine(SensitiveDataRedactor.RedactSensitiveData(content));
                 }
             }
 

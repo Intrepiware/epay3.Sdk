@@ -1,7 +1,7 @@
-using System.Threading;
-using System.Threading.Tasks;
 using epay3.Sdk.Http;
 using epay3.Sdk.Models;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace epay3.Sdk.Resources
 {

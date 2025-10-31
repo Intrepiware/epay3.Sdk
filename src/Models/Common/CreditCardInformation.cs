@@ -1,3 +1,5 @@
+using epay3.Sdk.Attributes;
+
 namespace epay3.Sdk.Models
 {
     /// <summary>
@@ -13,11 +15,13 @@ namespace epay3.Sdk.Models
         /// <summary>
         /// Gets or sets the credit card number.
         /// </summary>
+        [SensitiveData(RedactionMode.MaskShowLast4)]
         public string CardNumber { get; set; }
 
         /// <summary>
         /// Gets or sets the security code for the credit card (CVV/CVC).
         /// </summary>
+        [SensitiveData(RedactionMode.Complete, RedactedValue = "XXX")]
         public string Cvc { get; set; }
 
         /// <summary>

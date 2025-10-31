@@ -1,3 +1,7 @@
+using epay3.Sdk.Exceptions;
+using epay3.Sdk.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +11,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using epay3.Sdk.Exceptions;
-using epay3.Sdk.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace epay3.Sdk.Http
 {
